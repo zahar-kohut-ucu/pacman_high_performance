@@ -4,7 +4,8 @@ import node
 import random
 
 class Maze:
-    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 4):
+    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 4, seedd: int = 100):
+        random.seed(seedd)
         self.m = m
         self.n = n
         self.numberOfDots = numberOfDots
@@ -34,7 +35,7 @@ class Maze:
         neighbours = self.getNeighbours(current)
         random.shuffle(neighbours)
         for neighbor in neighbours:
-            if isinstance(neighbor.getState(), node.nodeStates.wallState):
+            if str(neighbor.getState()) == "w":
                 self.getNode(int((current.getCoordinates()[0] + neighbor.getCoordinates()[0])/2), int((current.getCoordinates()[1] + neighbor.getCoordinates()[1])/2)).changeState(2)
                 self.generateMaze(neighbor)
     

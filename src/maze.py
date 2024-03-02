@@ -41,7 +41,7 @@ class Maze:
         neighbours = self.getNeighbours(current)
         random.shuffle(neighbours)
         for neighbor in neighbours:
-            if str(neighbor.getState()) == "w":
+            if isinstance(neighbor.getState(), node.nodeStates.wallState):
                 breakWallAt = (int((current.getCoordinates()[0] + neighbor.getCoordinates()[0])/2), int((current.getCoordinates()[1] + neighbor.getCoordinates()[1])/2))
                 self._freePositions.append(breakWallAt)
                 self.getNode(breakWallAt[0], breakWallAt[1]).changeState(2)

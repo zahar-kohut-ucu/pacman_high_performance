@@ -7,12 +7,14 @@ class Node:
         self._x = x
         self._y = y
         self.team = team
+        self._stateClass = state
         self._state = state()
         self._isTaken = False
 
     def changeState(self, opt):
         self._state = self._state.changeState(opt)
-
+        self._stateClass = nodeStates.states[opt]
+        
     def getState(self):
         return self._state
 
@@ -21,3 +23,6 @@ class Node:
 
     def isTaken(self):
         return self._isTaken
+
+    def getStateClass(self):
+        return self._stateClass

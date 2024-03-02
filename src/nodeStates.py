@@ -31,7 +31,7 @@ class wallState(State):
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return "■"
+        return "w"
 
 # 2
 class freeState(State):
@@ -44,7 +44,7 @@ class freeState(State):
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return " "
+        return "f"
 
 # 3
 class dotState(State):
@@ -57,7 +57,7 @@ class dotState(State):
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return "*"
+        return "d"
 
 
 states = [noneState, wallState, freeState, dotState]

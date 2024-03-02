@@ -11,6 +11,9 @@ class Creature:
 
     def getCoordinates(self) -> None:
         return (self._x, self._y)
+
+    def getTeam(self) -> int:
+        return self._team
     
 
 class Pacman(Creature):
@@ -36,3 +39,18 @@ class Pacman(Creature):
 class Ghost(Creature):
     def __init__(self, x: int, y: int, team: int) -> None:
         super().__init__(x, y, team)
+
+def createPacmans() -> list[Pacman]:
+    pacmans = []
+    for i in range(2):
+        pacmans.append(Pacman(0,0,2))
+    pacmans[0]._team = 1
+    return pacmans
+
+def createGhosts() -> list[Ghost]:
+    ghosts = []
+    for i in range(6):
+        ghosts.append(Ghost(0, 0, 2))
+    for i in range(3):
+        ghosts[i]._team = 1
+    return ghosts

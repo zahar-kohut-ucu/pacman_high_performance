@@ -1,12 +1,13 @@
 # Class of node
 #Imports
+from creatures import Creature
 import nodeStates
 
 class Node:
-    def __init__(self, x: int, y: int, team: int, state = nodeStates.noneState):
+    def __init__(self, x: int, y: int, team: int = 0, state = nodeStates.noneState):
         self._x = x
         self._y = y
-        self.team = team
+        self._team = team
         self._stateClass = state
         self._state = state()
         self._isTaken = False
@@ -23,6 +24,13 @@ class Node:
 
     def isTaken(self):
         return self._isTaken
+    
+    def placeCreatue(self, creature: Creature):
+        self._team = creature.getTeam()
+        self.isTaken = True
+    
+    def getTeam(self):
+        return self._team
 
     def getStateClass(self):
         return self._stateClass

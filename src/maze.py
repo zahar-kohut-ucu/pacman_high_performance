@@ -1,5 +1,6 @@
 # Maze implementation
 # Imports
+from creatures import Ghost, Pacman
 import node
 import random
 
@@ -12,9 +13,10 @@ class Maze:
         self.trueM = m + 2
         self.trueN = n*2 + 3
         self.numberOfDots = numberOfDots
-        self._maze = [[node.Node(i, j, 1, node.nodeStates.wallState) for j in range(n)] for i in range(m)]
+        self._maze = [[node.Node(i, j, 0, node.nodeStates.wallState) for j in range(n)] for i in range(m)]
         self._freePositions = []
         self._dotsPosition = []
+        self._ghostsPositions = []
         # generate maze 
         self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.spawnDots()
@@ -56,11 +58,13 @@ class Maze:
         self._dotsPosition = random.sample(self._freePositions, min(len(self._freePositions), self.numberOfDots))
         for i, j in self._dotsPosition:
             self.getNode(i, j).changeState(3)
+            self.getNode(i, j)._team = 1
+
 
     def mazeExtend(self):
         for i in range(self.m):
             self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))
-            self._maze[i] += [node.Node(i, self.n + 1 + j, 2, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
+            self._maze[i] += [node.Node(i, self.n + 1 + j, 0, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
 
     def wallExtend(self):
         self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
@@ -68,3 +72,30 @@ class Maze:
         for i in range(self.trueM):
             self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
             self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))
+        arr = []
+        for i, j in self._dotsPosition:
+            arr.append([i + 1, self.trueN - j - 2])
+            self.getNode(i + 1, self.trueN - j - 2)._team = 2
+        self._dotsPosition += arr
+            
+
+    def spawnPacmans(self, pacmans: list[Pacman]):
+        for i in range(self.trueN):
+            for j in range(self.trueM):
+                if str(self.getNode(i, j).getState()) == "free":
+                    for pacman in pacmans:
+                        if pacman.getTeam() == 2:
+                            j = self.trueN - j - 1
+                        self.getNode(i, j).placeCreatue(pacman)
+                        pacman.move(i, j)
+                    return None
+
+    def spawnGhosts(self, ghosts: list[Ghost]):
+        for k, (i, j) in enumerate(self.getDotsPosition()[:3]):
+            coords = [[i,j+1], [i+1,j], [i,j-1], [i-1,j]]
+            for x, y in coords:
+                if str(self.getNode(x, y).getState()) == "free":
+                    ghosts[k+3].move(x,self.trueN - y - 1)
+                    ghosts[k].move(x,y)
+                    break
+                

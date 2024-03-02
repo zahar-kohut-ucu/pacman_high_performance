@@ -2,12 +2,13 @@
 import maze
 import visualization
 import pygame
+import creatures
 
 m = 21
 n = 21
 
 def main():
-    myMaze = maze.Maze(m, n, 5, setSeed = True, seed = 130)
+    myMaze = maze.Maze(m, n, 3, setSeed = True, seed = 10)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -15,7 +16,15 @@ def main():
     screen = pygame.display.set_mode((width * tileSize, height * tileSize))
     pygame.display.set_caption("Pacman")
 
+    pacmans =  creatures.createPacmans()
+    ghosts =  creatures.createGhosts()
+
     visualization.initBoard(myMaze, screen, width, height)
+
+    myMaze.spawnPacmans(pacmans)
+    myMaze.spawnGhosts(ghosts)
+
+    visualization.spawnCreatures(screen, ghosts, pacmans)
 
     while True:
         for event in pygame.event.get():

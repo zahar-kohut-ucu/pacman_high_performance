@@ -1,11 +1,8 @@
 # Implementation of state of nodes in maze
 
 class State:
-    def __init__(self, team: int):
-        if team in [1,2]:
-            self.team = team # team number
-        else:
-            raise ValueError("Number of team should be 1 either 2!")
+    def __init__(self):
+        pass
 
     def changeState(self, opt):
         pass
@@ -16,7 +13,7 @@ class noneState(State):
         if opt == 0:
             return self
         elif 0 < opt < len(states):
-            return states[opt](self.team)
+            return states[opt]()
         else:
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
@@ -28,11 +25,13 @@ class wallState(State):
     def changeState(self, opt: int):
         if opt == 0:
             return self
+        elif opt == 2:
+            return freeState()
         else:
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return "w"
+        return "■"
 
 # 2
 class freeState(State):
@@ -45,7 +44,7 @@ class freeState(State):
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return "f"
+        return " "
 
 # 3
 class dotState(State):
@@ -58,7 +57,7 @@ class dotState(State):
             raise ValueError("Such state do not exist or it cannot be set for this node!")
 
     def __str__(self):
-        return "d"
+        return "*"
 
 
 states = [noneState, wallState, freeState, dotState]

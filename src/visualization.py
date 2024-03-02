@@ -17,6 +17,6 @@ def drawBoard(screen: pygame.Surface, width: int, height: int, icon: nodeStates.
     for i in range(width):
         for j in range(height):
             iconImage = pygame.image.load(f"src/icons/{str(icon)}.png")
-            screen.blit(iconImage, (x, y))
+            screen.blit(iconImage, (i, j))
             # drawTile(screen, i * tileSize, j * tileSize, icon)
     pygame.display.flip()

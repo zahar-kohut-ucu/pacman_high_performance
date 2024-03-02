@@ -9,14 +9,19 @@ class Maze:
             random.seed(seed)
         self.m = m
         self.n = n
+        self.trueM = m + 2
+        self.trueN = n*2 + 3
         self.numberOfDots = numberOfDots
         self._maze = [[node.Node(i, j, 1, node.nodeStates.wallState) for j in range(n)] for i in range(m)]
         self._freePositions = []
         self._dotsPosition = []
         # generate maze 
-        self.generateMaze(self.getNode(random.randint(0, m - 1), random.randint(0, n - 1)))
+        self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.spawnDots()
         self.mazeExtend()
+        self.wallExtend()
+        
+
 
     def getDotsPosition(self):
         return self._dotsPosition
@@ -56,3 +61,10 @@ class Maze:
         for i in range(self.m):
             self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))
             self._maze[i] += [node.Node(i, self.n + 1 + j, 2, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
+
+    def wallExtend(self):
+        self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+        self._maze.append([node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+        for i in range(self.trueM):
+            self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
+            self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))

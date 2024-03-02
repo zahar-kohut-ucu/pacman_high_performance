@@ -4,19 +4,30 @@ import node
 import random
 
 class Maze:
-    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 4, seedd: int = 100):
-        random.seed(seedd)
+    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 1000000000000, setSeed: bool = False, seed: int = 100):
+        if setSeed:
+            random.seed(seed)
         self.m = m
         self.n = n
+        self.trueM = m + 2
+        self.trueN = n*2 + 3
         self.numberOfDots = numberOfDots
         self._maze = [[node.Node(i, j, 1, node.nodeStates.wallState) for j in range(n)] for i in range(m)]
         self._freePositions = []
-        self._dotsPosition = [] 
-        self.generateMaze(self.getNode(random.randint(0, m - 1), random.randint(0, n - 1)))
+        self._dotsPosition = []
+        # generate maze 
+        self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.spawnDots()
+        self.mazeExtend()
+        self.wallExtend()
+        
+
 
     def getDotsPosition(self):
         return self._dotsPosition
+    
+    def getFreePosition(self):
+        return self._freePosition
 
     def getNode(self, i: int, j: int):
         return self._maze[i][j]
@@ -35,50 +46,25 @@ class Maze:
         neighbours = self.getNeighbours(current)
         random.shuffle(neighbours)
         for neighbor in neighbours:
-            if str(neighbor.getState()) == "w":
-                self.getNode(int((current.getCoordinates()[0] + neighbor.getCoordinates()[0])/2), int((current.getCoordinates()[1] + neighbor.getCoordinates()[1])/2)).changeState(2)
+            if isinstance(neighbor.getState(), node.nodeStates.wallState):
+                breakWallAt = (int((current.getCoordinates()[0] + neighbor.getCoordinates()[0])/2), int((current.getCoordinates()[1] + neighbor.getCoordinates()[1])/2))
+                self._freePositions.append(breakWallAt)
+                self.getNode(breakWallAt[0], breakWallAt[1]).changeState(2)
                 self.generateMaze(neighbor)
     
     def spawnDots(self):
-        positions = random.sample(self._freePositions, self.numberOfDots)
-        for i, j in positions:
+        self._dotsPosition = random.sample(self._freePositions, min(len(self._freePositions), self.numberOfDots))
+        for i, j in self._dotsPosition:
             self.getNode(i, j).changeState(3)
 
+    def mazeExtend(self):
+        for i in range(self.m):
+            self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))
+            self._maze[i] += [node.Node(i, self.n + 1 + j, 2, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
 
-            
-
-
-# def generate_maze(grid, current_node):
-#     # Mark the current node as visited
-#     grid[current_node] = "passage"
-
-#     # Get a list of neighboring nodes
-#     neighbors = get_neighbors(current_node)
-
-#     # Randomly shuffle the list of neighbors
-#     random.shuffle(neighbors)
-
-#     # Iterate over the neighbors
-#     for neighbor in neighbors:
-#         if grid[neighbor] == "wall":
-#             # Carve a passage to the neighbor
-#             remove_wall(current_node, neighbor)
-#             # Recursively call generate_maze with the neighbor as the current node
-#             generate_maze(grid, neighbor)
-
-# def get_neighbors(node):
-#     # Returns a list of neighboring nodes
-#     pass
-
-# def remove_wall(node1, node2):
-#     # Removes the wall between node1 and node2
-#     pass
-
-# # Example usage
-# grid = initialize_grid()
-# starting_node = choose_starting_node()
-# generate_maze(grid, starting_node)
-
-
-
-
+    def wallExtend(self):
+        self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+        self._maze.append([node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+        for i in range(self.trueM):
+            self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
+            self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))

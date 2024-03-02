@@ -82,20 +82,22 @@ class Maze:
     def spawnPacmans(self, pacmans: list[Pacman]):
         for i in range(self.trueN):
             for j in range(self.trueM):
-                if str(self.getNode(i, j).getState()) == "free":
-                    for pacman in pacmans:
-                        if pacman.getTeam() == 2:
-                            j = self.trueN - j - 1
-                        self.getNode(i, j).placeCreatue(pacman)
-                        pacman.move(i, j)
-                    return None
+                if j <= self.trueN//4:
+                    if str(self.getNode(i, j).getState()) == "free":
+                        for pacman in pacmans:
+                            if pacman.getTeam() == 2:
+                                j = self.trueN - j - 1
+                            self.getNode(i, j).placeCreatue(pacman)
+                            pacman.move(i, j)
+                        return None
 
     def spawnGhosts(self, ghosts: list[Ghost]):
-        for k, (i, j) in enumerate(self.getDotsPosition()[:3]):
+        length = len(self.getDotsPosition())//2
+        for k, (i, j) in enumerate(self.getDotsPosition()[:length]):
             coords = [[i,j+1], [i+1,j], [i,j-1], [i-1,j]]
             for x, y in coords:
                 if str(self.getNode(x, y).getState()) == "free":
-                    ghosts[k+3].move(x,self.trueN - y - 1)
+                    ghosts[k + length].move(x,self.trueN - y - 1)
                     ghosts[k].move(x,y)
                     break
                 

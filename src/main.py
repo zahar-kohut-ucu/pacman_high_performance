@@ -4,11 +4,13 @@ import visualization
 import pygame
 import creatures
 
-m = 21
-n = 21
+m = 21 # Number of rcolumns
+n = 21 # Number of rows
+k = 4  # Number of ghosts and dots
 
 def main():
-    myMaze = maze.Maze(m, n, 3, setSeed = True, seed = 10)
+    
+    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 10)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -17,7 +19,7 @@ def main():
     pygame.display.set_caption("Pacman")
 
     pacmans =  creatures.createPacmans()
-    ghosts =  creatures.createGhosts()
+    ghosts =  creatures.createGhosts(k)
 
     visualization.initBoard(myMaze, screen, width, height)
 

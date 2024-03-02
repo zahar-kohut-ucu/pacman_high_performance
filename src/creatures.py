@@ -47,10 +47,10 @@ def createPacmans() -> list[Pacman]:
     pacmans[0]._team = 1
     return pacmans
 
-def createGhosts() -> list[Ghost]:
+def createGhosts(n: int = 3) -> list[Ghost]:
     ghosts = []
-    for i in range(6):
+    for i in range(n * 2):
         ghosts.append(Ghost(0, 0, 2))
-    for i in range(3):
+    for i in range(n):
         ghosts[i]._team = 1
     return ghosts

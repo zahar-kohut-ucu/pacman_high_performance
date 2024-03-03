@@ -98,13 +98,19 @@ class Maze:
     def changeCreaturesCoordinates(self, pacmans: list[Pacman], ghosts: list[Ghost], newCoordsPac: list[int], newCoordsGh: list[int]):
         for k, ghost in enumerate(ghosts):
             i, j = ghost.getCoordinates()
-            self.getNode(i, j).setFree()
-            self.getNode(*newCoordsGh[k]).placeCreatue(ghost)
+            if not self.checkDot(i, j):
+                self.getNode(i, j).setFree()
+            if not self.checkDot(*newCoordsGh[k]):
+                self.getNode(*newCoordsGh[k]).placeCreatue(ghost)
             ghost.move(*newCoordsGh[k])
         
         for k, pacman in enumerate(pacmans):
             i, j = pacman.getCoordinates()
-            self.getNode(i, j).setFree()
-            self.getNode(*newCoordsPac[k]).placeCreatue(pacman)
+            if not self.checkDot(i, j):
+                self.getNode(i, j).setFree()
+            if not self.checkDot(*newCoordsGh[k]):
+                self.getNode(*newCoordsPac[k]).placeCreatue(pacman)
             pacman.move(*newCoordsPac[k])
 
+    def checkDot(self, x: int, y: int):
+        return self.getNode(x, y) in self._dotsPosition

@@ -50,6 +50,11 @@ def redrawBoard(screen: pygame.Surface, maze: maze.Maze, pacmans, ghosts, coords
     for i, j in coordsOld:
         tile = maze.getNode(i, j)
         drawTile(screen, tile)
+    
+    dots = maze.getDotsPosition()
+    for di, dj in dots:
+        tile = maze.getNode(di, dj)
+        drawTile(screen, tile)
 
     for ghost in ghosts:
         x, y = ghost.getCoordinates()

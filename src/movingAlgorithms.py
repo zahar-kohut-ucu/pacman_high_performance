@@ -77,6 +77,8 @@ def getGhostNextMove(myMaze: maze.Maze, ghost: creatures.Ghost, enemyPacman: cre
         else:
             break
     # choose move
+    if horFound and verFound:
+        return (ghost._x, ghost._y)
     if horFound:
         return (ghost._x, ghost._y - 1 + 2 * (ghost._y < enemyPacman._y))
     if verFound:

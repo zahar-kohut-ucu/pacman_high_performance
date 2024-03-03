@@ -10,8 +10,8 @@ class Maze:
             random.seed(seed)
         self.m = m
         self.n = n
-        self.trueM = m + 2
-        self.trueN = n*2 + 3
+        self.trueM = m
+        self.trueN = n * 2 + 1
         self.numberOfDots = numberOfDots
         self._maze = [[node.Node(i, j, 0, node.nodeStates.wallState) for j in range(n)] for i in range(m)]
         self._freePositions = []
@@ -21,7 +21,7 @@ class Maze:
         self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.spawnDots()
         self.mazeExtend()
-        self.wallExtend()
+        # self.wallExtend()
         
 
 
@@ -65,18 +65,19 @@ class Maze:
         for i in range(self.m):
             self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))
             self._maze[i] += [node.Node(i, self.n + 1 + j, 0, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
-
-    def wallExtend(self):
-        self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
-        self._maze.append([node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
-        for i in range(self.trueM):
-            self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
-            self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))
         arr = []
         for i, j in self._dotsPosition:
-            arr.append([i + 1, self.trueN - j - 2])
-            self.getNode(i + 1, self.trueN - j - 2)._team = 2
+            arr.append([i, self.trueN - j - 1])
+            self.getNode(i, self.trueN - j - 1)._team = 2
         self._dotsPosition += arr
+
+    # def wallExtend(self):
+    #     self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+    #     self._maze.append([node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
+    #     for i in range(self.trueM):
+    #         self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
+    #         self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))
+    #     
             
 
     def spawnPacmans(self, pacmans: list[Pacman]):
@@ -98,6 +99,30 @@ class Maze:
             for x, y in coords:
                 if str(self.getNode(x, y).getState()) == "free":
                     ghosts[k + length].move(x,self.trueN - y - 1)
+                    self.getNode(x, self.trueN - y - 1).placeCreatue(ghosts[k + length])
                     ghosts[k].move(x,y)
+                    self.getNode(x, y).placeCreatue(ghosts[k])
                     break
-                
+
+    def changeCreaturesCoordinates(self, pacmans: list[Pacman], ghosts: list[Ghost], newCoordsPac: list[int], newCoordsGh: list[int]):
+        for k, ghost in enumerate(ghosts):
+            i, j = ghost.getCoordinates()
+            self.getNode(i, j).setFree()
+            self.getNode(*newCoordsGh[k]).placeCreatue(ghost)
+        
+        for k, pacman in enumerate(pacmans):
+            i, j = pacman.getCoordinates()
+            self.getNode(i, j).setFree()
+            self.getNode(*newCoordsPac[k]).placeCreatue(pacman)
+
+
+
+            # print(i, j)
+            # print(self.getNode(i, j).getCoordinates())
+
+            # print(self.getNode(i, j).isTaken())
+            # print("miwa")
+
+
+
+        

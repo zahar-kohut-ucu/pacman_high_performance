@@ -10,7 +10,7 @@ class Node:
         self._team = team
         self._stateClass = state
         self._state = state()
-        self._isTaken = False
+        self._taken = False
 
     def changeState(self, opt):
         self._state = self._state.changeState(opt)
@@ -23,11 +23,15 @@ class Node:
         return (self._x, self._y)
 
     def isTaken(self):
-        return self._isTaken
+        return self._taken
     
     def placeCreatue(self, creature: Creature):
         self._team = creature.getTeam()
-        self.isTaken = True
+        self._taken = True
+    
+    def setFree(self):
+        self.changeState(2)
+        self._taken = False
     
     def getTeam(self):
         return self._team

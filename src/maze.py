@@ -67,7 +67,7 @@ class Maze:
             self._maze[i] += [node.Node(i, self.n + 1 + j, 0, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
         arr = []
         for i, j in self._dotsPosition:
-            arr.append([i, self.trueN - j - 1])
+            arr.append((i, self.trueN - j - 1))
             self.getNode(i, self.trueN - j - 1)._team = 2
         self._dotsPosition += arr
   

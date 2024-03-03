@@ -36,7 +36,7 @@ def findShortestPathTo(myMaze: maze.Maze, pacmanPos, dotPos):
     curr = dotPos
     while curr != pacmanPos:
         way.append(curr)
-        for di, dj:
+        for di, dj in ways:
             i, j = curr[0] - di, curr[1] - dj
             if (i, j) in distances and distances[curr] == distances[(i, j)] + 1:
                 curr = (i, j)
@@ -49,7 +49,7 @@ def getNextPacmanMove(myMaze: maze.Maze, pacmanPos, dotPositions, freePositions)
     closest = min(dotPositions, key= lambda dot: len(findShortestPathTo(myMaze, pacmanPos, dot)))
     way = findShortestPathTo(myMaze, pacmanPos, closest)
     if len(way) > 1:
-        nextMove = path[1]
+        nextMove = way[1]
     else:
         nextMove = pacmanPos
     return nextMove
@@ -85,7 +85,7 @@ def getGhostNextMove(myMaze: maze.Maze, ghost: creatures.Ghost, enemyPacman: cre
         return (ghost._x - 1 + 2 * (ghost._x < enemyPacman._x), ghost._y)
 
     allMoves = [(ghost._x - 1, ghost._y), (ghost._x + 1, ghost._y), (ghost._x, ghost._y - 1), (ghost._x, ghost._y + 1)]
-    possMoves []
+    possMoves = []
     for i, j in allMoves:
         if 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall":
             possMoves.append((i, j))

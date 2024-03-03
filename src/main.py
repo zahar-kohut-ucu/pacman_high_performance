@@ -30,12 +30,19 @@ def main():
     visualization.spawnCreatures(screen, ghosts, pacmans)
     pygame.display.flip()
 
+    oldPacmans = [p.getCoordinates() for p in pacmans]
+    oldGhosts = [g.getCoordinates() for g in ghosts]
+    myMaze.changeCreaturesCoordinates(pacmans, ghosts, [[0,1], [0,2]], [[0,4], [0,5], [0,6], [0,7], [0,8], [0,9], [0,10], [0,12]])
+    visualization.redrawBoard(screen, myMaze, pacmans, ghosts, oldGhosts + oldPacmans)
+    pygame.display.flip()
+
+
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        # myMaze.changeCreaturesCoordinates(pacmans, ghosts, [1,1], [1,1])
+        
         pygame.display.flip()
         
 

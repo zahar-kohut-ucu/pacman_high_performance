@@ -30,8 +30,8 @@ class Node:
         self._taken = True
     
     def setFree(self):
-        self.changeState(2)
         self._taken = False
+        self._team = 0
     
     def getTeam(self):
         return self._team

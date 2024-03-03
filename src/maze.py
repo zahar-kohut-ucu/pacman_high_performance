@@ -70,16 +70,7 @@ class Maze:
             arr.append([i, self.trueN - j - 1])
             self.getNode(i, self.trueN - j - 1)._team = 2
         self._dotsPosition += arr
-
-    # def wallExtend(self):
-    #     self._maze.insert(0, [node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
-    #     self._maze.append([node.Node(-1, -1, 0, node.nodeStates.wallState) for _ in range(self.trueN - 2)])
-    #     for i in range(self.trueM):
-    #         self._maze[i].insert(0, node.Node(-1, -1, 0, node.nodeStates.wallState))
-    #         self._maze[i].append(node.Node(-1, -1, 0, node.nodeStates.wallState))
-    #     
-            
-
+  
     def spawnPacmans(self, pacmans: list[Pacman]):
         for i in range(self.trueN):
             for j in range(self.trueM):
@@ -109,20 +100,11 @@ class Maze:
             i, j = ghost.getCoordinates()
             self.getNode(i, j).setFree()
             self.getNode(*newCoordsGh[k]).placeCreatue(ghost)
+            ghost.move(*newCoordsGh[k])
         
         for k, pacman in enumerate(pacmans):
             i, j = pacman.getCoordinates()
             self.getNode(i, j).setFree()
             self.getNode(*newCoordsPac[k]).placeCreatue(pacman)
+            pacman.move(*newCoordsPac[k])
 
-
-
-            # print(i, j)
-            # print(self.getNode(i, j).getCoordinates())
-
-            # print(self.getNode(i, j).isTaken())
-            # print("miwa")
-
-
-
-        

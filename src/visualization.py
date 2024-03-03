@@ -11,7 +11,7 @@ def drawTile(screen: pygame.Surface, tile: node.Node, tileSize: int = 20):
     x, y = tile.getCoordinates()
     if  team < 1:
         team = ''
-        
+
     iconImage = pygame.image.load(f"src/icons/{str(tile.getState())}{team}.png")
     screen.blit(iconImage, ((y + 1) * tileSize, (x + 1) * tileSize))
     
@@ -22,13 +22,6 @@ def initBoard(maze: maze.Maze, screen: pygame.Surface, width: int, height: int, 
         for y in range(width):
             tile = maze.getNode(x, y)
             drawTile(screen, tile)
-
-            # team = maze.getNode(x, y).getTeam()
-            # if  team < 1:
-            #     team = ''
-            
-            # iconImage = pygame.image.load(f"src/icons/{str(maze.getNode(x, y).getState())}{team}.png")
-            # screen.blit(iconImage, ((y + 1) * tileSize, (x + 1) * tileSize))
 
 def drawBorders(screen: pygame.Surface, width: int, height: int, tileSize: int = 20):
     for x in range(height+2):
@@ -53,7 +46,18 @@ def spawnCreatures(screen: pygame.Surface, ghosts: list, pacmans: list, tileSize
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
 
 
-def redrawBoard(screen: pygame.Surface, maze: maze.Maze, coordinates: list[int]):
-    for i, j in coordinates:
+def redrawBoard(screen: pygame.Surface, maze: maze.Maze, pacmans, ghosts, coordsOld: list[int], tileSize=20):
+    for i, j in coordsOld:
         tile = maze.getNode(i, j)
         drawTile(screen, tile)
+
+    for ghost in ghosts:
+        x, y = ghost.getCoordinates()
+        iconImage = pygame.image.load(f"src/icons/ghost{ghost.getTeam()}.png")
+        screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
+    
+    for pacman in pacmans:
+        x, y = pacman.getCoordinates()
+        iconImage = pygame.image.load(f"src/icons/pacman{pacman.getTeam()}.png")
+        screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
+

@@ -45,18 +45,20 @@ def findShortestPathTo(myMaze: maze.Maze, pacmanPos, dotPos):
     return way[::-1]
 
 # Returns new Pacman position
-def getNextPacmanMove(myMaze: maze.Maze, pacmanPos, dotPositions, freePositions):
-    closest = min(dotPositions, key= lambda dot: len(findShortestPathTo(myMaze, pacmanPos, dot)))
-    way = findShortestPathTo(myMaze, pacmanPos, closest)
+def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman):
+    dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() == pacman.getTeam(), myMaze.getDotsPosition()))
+    closest = min(dots, key= lambda dot: len(findShortestPathTo(myMaze, pacman.getCoordinates(), dot)))
+    way = findShortestPathTo(myMaze, pacman.getCoordinates(), closest)
     if len(way) > 1:
-        nextMove = way[1]
+        nextMove = way[0]
     else:
         nextMove = pacmanPos
     return nextMove
 
 # Returns new ghost position
-def getGhostNextMove(myMaze: maze.Maze, ghost: creatures.Ghost, enemyPacman: creatures.Pacman):
+def getGhostNextMove(myMaze: maze.Maze, ghost: creatures.Ghost, pacmans):
     # look for Pacman
+    enemyPacman = pacmans[0] if pacmans[0].getTeam() != ghost.getTeam() else pacmans[1]
     horFound = True if ghost._x == enemyPacman._x else False
     for j in range(min(ghost._y, enemyPacman._y) + 1, max(ghost._y, enemyPacman._y)):
         if horFound:

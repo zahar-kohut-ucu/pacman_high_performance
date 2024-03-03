@@ -52,7 +52,7 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman):
     if len(way) > 1:
         nextMove = way[0]
     else:
-        nextMove = pacmanPos
+        nextMove = pacman.getCoordinates()
     return nextMove
 
 # Returns new ghost position

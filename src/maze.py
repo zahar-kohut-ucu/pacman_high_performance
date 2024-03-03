@@ -113,4 +113,4 @@ class Maze:
             pacman.move(*newCoordsPac[k])
 
     def checkDot(self, x: int, y: int):
-        return self.getNode(x, y) in self._dotsPosition
+        return (x, y) in self._dotsPosition

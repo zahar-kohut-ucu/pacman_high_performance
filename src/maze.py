@@ -103,10 +103,10 @@ class Maze:
             for x, y in coords:
                 if str(self.getNode(x, y).getState()) == "free":
                     ghosts[k + length].move(x,self.trueN - y - 1)
-                    self._ghostsPosition2.append()
+                    self._ghostsPosition2.append((x,self.trueN - y - 1))
                     self.getNode(x, self.trueN - y - 1).placeCreatue(ghosts[k + length])
                     ghosts[k].move(x,y)
-                    self._ghostsPosition1.append()
+                    self._ghostsPosition1.append((x,y))
                     self.getNode(x, y).placeCreatue(ghosts[k])
                     break
 
@@ -120,9 +120,9 @@ class Maze:
                 self.getNode(*newCoordsGh[k]).placeCreatue(ghost)
             ghost.move(*newCoordsGh[k])
             if ghost.getTeam() == 1:
-                self._ghostsPosition1.append(*newCoordsGh[k])
+                self._ghostsPosition1.append(newCoordsGh[k])
             else:
-                self._ghostsPosition2.append(*newCoordsGh[k])
+                self._ghostsPosition2.append(newCoordsGh[k])
 
         for k, pacman in enumerate(pacmans):
             i, j = pacman.getCoordinates()

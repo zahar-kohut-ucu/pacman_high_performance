@@ -36,7 +36,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                
         time.sleep(0.3)
         oldPacmans = [p.getCoordinates() for p in pacmans]
         oldGhosts = [g.getCoordinates() for g in ghosts]

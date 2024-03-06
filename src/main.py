@@ -6,6 +6,7 @@ import creatures
 import movingAlgorithms
 import time
 
+
 m = 21 # Number of rcolumns
 n = 21 # Number of rows
 k = 4  # Number of ghosts and dots

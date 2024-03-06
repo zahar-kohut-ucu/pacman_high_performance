@@ -12,12 +12,14 @@ k = 4  # Number of ghosts and dots
 
 def main():
     
-    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 10)
+    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 13225)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
+    pygame.font.init()
+    font = pygame.font.SysFont('freesansbold.ttf', 24) 
+    screen = pygame.display.set_mode(((width + 2) * tileSize, (height + 5) * tileSize))
 
-    screen = pygame.display.set_mode(((width + 2) * tileSize, (height + 2) * tileSize))
     pygame.display.set_caption("Pacman")
 
     pacmans =  creatures.createPacmans()
@@ -32,12 +34,14 @@ def main():
     visualization.spawnCreatures(screen, ghosts, pacmans)
     pygame.display.flip()
 
-    while True:
+    GAME = True
+
+    while GAME:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 
-        time.sleep(0.3)
+        time.sleep(0.05)
         oldPacmans = [p.getCoordinates() for p in pacmans]
         oldGhosts = [g.getCoordinates() for g in ghosts]
         newPacmanPositions = []
@@ -45,13 +49,26 @@ def main():
 
         for pacman in pacmans:
             newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
-
         for ghost in ghosts:    
             newGhostsPosition.append(movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans))
-
+        
         myMaze.changeCreaturesCoordinates(pacmans, ghosts, newPacmanPositions, newGhostsPosition)
         visualization.redrawBoard(screen, myMaze, pacmans, ghosts, oldGhosts + oldPacmans)
+        for pacman in pacmans:
+            move = myMaze.checkMove(pacman)
+            if move == 0:
+                END = True
+            elif move == 1:
+                myMaze.eatAndRespawnDot(pacman)
+                text_surface = font.render("Pac 1: " + str(pacmans[0].getPoints()) + " Pac 2: " + str(pacmans[1].getPoints()), True, (0, 255, 0))
+                fill_rect = pygame.Rect(0, (height + 3) * tileSize, tileSize * width, tileSize * 2) 
+                pygame.draw.rect(screen, (0, 0, 0), fill_rect)
+                screen.blit(text_surface, ((width-4) * tileSize // 2, (height + 3) * tileSize))
         pygame.display.flip()
+
+    time.sleep(5)
+    pygame.quit()
+
         
 if __name__ == '__main__':
     main()

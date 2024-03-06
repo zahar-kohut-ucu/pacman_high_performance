@@ -46,13 +46,13 @@ def findShortestPathTo(myMaze: maze.Maze, pacmanPos, dotPos):
 
 # Returns new Pacman position
 def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman):
-    dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() == pacman.getTeam(), myMaze.getDotsPosition()))
+    dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
     closest = min(dots, key= lambda dot: len(findShortestPathTo(myMaze, pacman.getCoordinates(), dot)))
     way = findShortestPathTo(myMaze, pacman.getCoordinates(), closest)
-    if len(way) > 1:
-        nextMove = way[0]
-    else:
-        nextMove = pacman.getCoordinates()
+    # if len(way) > 1:
+    nextMove = way[0]
+    # else:
+    #     nextMove = pacman.getCoordinates()
     return nextMove
 
 # Returns new ghost position
@@ -75,7 +75,7 @@ def getGhostNextMove(myMaze: maze.Maze, ghost: creatures.Ghost, pacmans):
             if str(myMaze.getNode(i, ghost._y).getState()) != "wall":
                 continue
             else:
-                horFound = False
+                verFound = False
         else:
             break
     # choose move

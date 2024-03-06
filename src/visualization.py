@@ -17,7 +17,7 @@ def drawTile(screen: pygame.Surface, tile: node.Node, tileSize: int = 20):
     
 
 def initBoard(maze: maze.Maze, screen: pygame.Surface, width: int, height: int, tileSize: int = 20):
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
     for x in range(height):
         for y in range(width):
             tile = maze.getNode(x, y)
@@ -49,7 +49,8 @@ def spawnCreatures(screen: pygame.Surface, ghosts: list, pacmans: list, tileSize
 def redrawBoard(screen: pygame.Surface, maze: maze.Maze, pacmans, ghosts, coordsOld: list[int], tileSize=20):
     for i, j in coordsOld:
         tile = maze.getNode(i, j)
-        drawTile(screen, tile)
+        if tile.getTeam() == 0:
+            drawTile(screen, tile)
     
     dots = maze.getDotsPosition()
     for di, dj in dots:
@@ -66,3 +67,4 @@ def redrawBoard(screen: pygame.Surface, maze: maze.Maze, pacmans, ghosts, coords
         iconImage = pygame.image.load(f"src/icons/pacman{pacman.getTeam()}.png")
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
 
+# def eatDot(self, maze)

@@ -26,7 +26,7 @@ class Node:
         return self._taken
     
     def placeCreatue(self, creature: Creature):
-        self._team = creature.getTeam()
+        # self._team = creature.getTeam()
         self._taken = True
     
     def setFree(self):

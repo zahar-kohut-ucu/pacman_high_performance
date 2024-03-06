@@ -4,6 +4,7 @@ import heapq
 import creatures
 import maze
 import random
+import time
 
 # Dijkstra
 def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
@@ -95,9 +96,13 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0
     algos = [dijkstraFindShortestPathTo, aStarFindShortestPathTo]
     dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
-    print(pacman.getCoordinates())
-    print(closest)
     way = algos[algo - 1](myMaze, pacman, closest)
+    if len(way) < 1:
+        print("==+========")
+        print(pacman.getCoordinates())
+        print(myMaze.getDotsPosition()) 
+        print("==+========")
+        time.sleep(50)
     nextMove = way[0]
     return nextMove
 

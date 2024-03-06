@@ -74,7 +74,11 @@ class Maze:
                 self.getNode(i, j)._team = team
         else:
             choice = random.choice(self._freePositions)
+            while self.getNode(*choice).isTaken():
+                choice = random.choice(self._freePositions)
+
             self._dotsPosition.append(choice)
+            self._freePositions.remove(choice)
             self.getNode(*choice).changeState(3)
             self.getNode(*choice)._team = team
 
@@ -85,6 +89,11 @@ class Maze:
         for i in range(self.m):
             self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))
             self._maze[i] += [node.Node(i, self.n + 1 + j, 0, self.getNode(i, -(j + 2)).getStateClass()) for j in range(self.n)]
+        length = len(self._freePositions)
+        for i in range(length):
+            x, y = self._freePositions[i]
+            self._freePositions.append((x, self.trueN - y - 1))
+
         arr = []
         for i, j in self._dotsPosition:
             arr.append((i, self.trueN - j - 1))
@@ -118,7 +127,7 @@ class Maze:
                     self.getNode(x, y).placeCreatue(ghosts[k])
                     break
 
-    def changeCreaturesCoordinates(self, pacmans: list[Pacman], ghosts: list[Ghost], newCoordsPac: list[int], newCoordsGh: list[int]):
+    def changeGhostsCoordinates(self, ghosts: list[Ghost], newCoordsGh: list[int]):
         self.clearGhostPositions()
         for k, ghost in enumerate(ghosts):
             i, j = ghost.getCoordinates()
@@ -132,11 +141,12 @@ class Maze:
             else:
                 self._ghostsPosition2.append(newCoordsGh[k])
 
+    def changePacmansCoordinates(self, pacmans: list[Pacman], newCoordsPac: list[int]):
         for k, pacman in enumerate(pacmans):
             i, j = pacman.getCoordinates()
             if not self.checkDot(i, j):
                 self.getNode(i, j).setFree()
-            if not self.checkDot(*newCoordsGh[k]):
+            if not self.checkDot(*newCoordsPac[k]):
                 self.getNode(*newCoordsPac[k]).placeCreatue(pacman)
             pacman.move(*newCoordsPac[k])
 
@@ -151,6 +161,7 @@ class Maze:
         pacman.addPoint()
         self._dotsPosition.remove((x,y))
         self.spawnDots(1, 3 - pacman.getTeam())
+        self._freePositions.append((x,y))
 
 
     def checkMove(self, pacman: Pacman):

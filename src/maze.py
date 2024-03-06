@@ -19,7 +19,7 @@ class Maze:
         self._ghostsPosition1 = []
         self._ghostsPosition2 = []
         self._pacmansPositions = []
-        # generate maze 
+        # generate maze
         self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.spawnDots()
         self.mazeExtend()
@@ -27,10 +27,10 @@ class Maze:
 
     def getDotsPosition(self):
         return self._dotsPosition
-    
+
     def getFreePosition(self):
         return self._freePosition
-    
+
     def clearGhostPositions(self):
         self._ghostsPosition1 = []
         self._ghostsPosition2 = []
@@ -49,7 +49,7 @@ class Maze:
         hor = list(filter(lambda item: 0 <= item < self.n, [j - 2, j + 2]))
         ver = list(filter(lambda item: 0 <= item < self.m, [i - 2, i + 2]))
         return [self.getNode(i, item) for item in hor] + [self.getNode(item, j) for item in ver]
-        
+
     # maze generator using DFS
     def generateMaze(self, current: node.Node):
         # getting neighbours
@@ -63,7 +63,7 @@ class Maze:
                 self._freePositions.append(breakWallAt)
                 self.getNode(breakWallAt[0], breakWallAt[1]).changeState(2)
                 self.generateMaze(neighbor)
-    
+
     def spawnDots(self, n: int = 0, team: int = 1):
         if n == 0:
             n = self.numberOfDots
@@ -82,7 +82,7 @@ class Maze:
             self.getNode(*choice).changeState(3)
             self.getNode(*choice)._team = team
 
-        
+
 
 
     def mazeExtend(self):
@@ -99,7 +99,7 @@ class Maze:
             arr.append((i, self.trueN - j - 1))
             self.getNode(i, self.trueN - j - 1)._team = 2
         self._dotsPosition += arr
-  
+
     def spawnPacmans(self, pacmans: list[Pacman]):
         for i in range(self.trueN):
             for j in range(self.trueM):
@@ -118,7 +118,7 @@ class Maze:
         for k, (i, j) in enumerate(self.getDotsPosition()[:length]):
             coords = [[i,j+1], [i+1,j], [i,j-1], [i-1,j]]
             for x, y in coords:
-                if str(self.getNode(x, y).getState()) == "free":
+                if 0 <= x < self.trueM and 0 <= y < self.trueN and str(self.getNode(x, y).getState()) == "free":
                     ghosts[k + length].move(x,self.trueN - y - 1)
                     self._ghostsPosition2.append((x,self.trueN - y - 1))
                     self.getNode(x, self.trueN - y - 1).placeCreatue(ghosts[k + length])
@@ -152,7 +152,7 @@ class Maze:
 
     def checkDot(self, x: int, y: int):
         return (x, y) in self._dotsPosition
-    
+
 
     def eatAndRespawnDot(self, pacman: Pacman):
         x, y  = pacman.getCoordinates()

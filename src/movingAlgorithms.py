@@ -25,7 +25,7 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
 
         for di, dj in ways:
             i, j = curr[0] + di, curr[1] + dj
-            if 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall" and (i,j) not in myMaze.getGhostPositions(3 - pacman.getTeam()):
+            if 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall":# and (i,j) not in myMaze.getGhostPositions(3 - pacman.getTeam()):
                 neighbour = (i, j)
                 newDistance = distance + 1
                 if neighbour not in distances or newDistance < distances[neighbour]:
@@ -65,7 +65,7 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
 
         for di, dj in ways:
             i, j = curr[0] + di, curr[1] + dj
-            if 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall" and (i,j) not in myMaze.getGhostPositions(3 - pacman.getTeam()):
+            if 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall":# and (i,j) not in myMaze.getGhostPositions(3 - pacman.getTeam()):
                 neighbour = (i, j)
                 newDistance = distance + 1
                 if neighbour not in distances or newDistance < distances[neighbour]:
@@ -93,8 +93,10 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0
     if not algo:
         algo = pacman.getTeam()
     algos = [dijkstraFindShortestPathTo, aStarFindShortestPathTo]
-    dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() == pacman.getTeam(), myMaze.getDotsPosition()))
+    dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
+    print(pacman.getCoordinates())
+    print(closest)
     way = algos[algo - 1](myMaze, pacman, closest)
     nextMove = way[0]
     return nextMove

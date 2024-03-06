@@ -12,7 +12,7 @@ k = 4  # Number of ghosts and dots
 
 def main():
     
-    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 13225)
+    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 132)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -41,14 +41,14 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 
-        time.sleep(0.05)
+        time.sleep(0.2)
         oldPacmans = [p.getCoordinates() for p in pacmans]
         oldGhosts = [g.getCoordinates() for g in ghosts]
         newPacmanPositions = []
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman, algo=1))
         for ghost in ghosts:    
             newGhostsPosition.append(movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans))
         
@@ -57,7 +57,7 @@ def main():
         for pacman in pacmans:
             move = myMaze.checkMove(pacman)
             if move == 0:
-                END = True
+                GAME = False
             elif move == 1:
                 myMaze.eatAndRespawnDot(pacman)
                 text_surface = font.render("Pac 1: " + str(pacmans[0].getPoints()) + " Pac 2: " + str(pacmans[1].getPoints()), True, (0, 255, 0))

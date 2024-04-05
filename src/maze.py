@@ -5,7 +5,7 @@ import node
 import random
 
 class Maze:
-    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 1000000000000, setSeed: bool = False, seed: int = 100):
+    def __init__(self, m: int = 35, n: int = 35, numberOfDots: int = 1000000000000, numberOfBroken: int = 40, setSeed: bool = False, seed: int = 100):
         if setSeed:
             random.seed(seed)
         self.m = m
@@ -21,6 +21,7 @@ class Maze:
         self._pacmansPositions = []
         # generate maze
         self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
+        self.breakWalls(numberOfBroken)
         self.spawnDots()
         self.mazeExtend()
         # self.wallExtend()
@@ -63,7 +64,22 @@ class Maze:
                 self._freePositions.append(breakWallAt)
                 self.getNode(breakWallAt[0], breakWallAt[1]).changeState(2)
                 self.generateMaze(neighbor)
-
+    
+    def breakWalls(self, n: int):
+        go = n
+        checked = set()
+        while go:
+            i, j = random.randint(1, self.m - 2), random.randint(1, self.n - 2)
+            if str(self.getNode(i, j).getState()) == "wall":
+                up = str(self.getNode(i + 1, j).getState()) == "wall"
+                down = str(self.getNode(i - 1, j).getState()) == "wall"
+                left = str(self.getNode(i, j - 1).getState()) == "wall"
+                right = str(self.getNode(i, j + 1).getState()) == "wall"
+                if ((up and down) and not (left or right)) or ((left and right) and not (up or down)):
+                    self.getNode(i, j).changeState(2)
+                    self._freePositions.append((i, j))
+                    go -= 1
+            
     def spawnDots(self, n: int = 0, team: int = 1):
         if n == 0:
             n = self.numberOfDots
@@ -81,9 +97,6 @@ class Maze:
             self._freePositions.remove(choice)
             self.getNode(*choice).changeState(3)
             self.getNode(*choice)._team = team
-
-
-
 
     def mazeExtend(self):
         for i in range(self.m):

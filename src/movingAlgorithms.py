@@ -50,8 +50,11 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
     queue = [(0 , pacmanPos)]
     avoidPositions = []
     for i, j in myMaze.getGhostPositions(3 - pacman.getTeam()):
-        if ((pacmanPos[1] == j and abs(pacmanPos[0] - i) < 4) or (pacmanPos[0] == i and abs(pacmanPos[1] - j) < 4) or (pacmanPos[0] == i and pacmanPos[1] == j and estimateEuristicCost(pacmanPos, (i,j)) < 7)) and (i, j) != dotPos:
+        if ((pacmanPos[1] == j and abs(pacmanPos[0] - i) < 5) or (pacmanPos[0] == i and abs(pacmanPos[1] - j) < 5) or (estimateEuristicCost(pacmanPos, (i,j)) < 7)) and (i, j) != dotPos:
             avoidPositions.append((i, j))
+            for di in range(-1, 2):
+                for dj in range(-1, 2):
+                    avoidPositions.append((i+di, j+dj))
     while queue:
         distance, curr = heapq.heappop(queue)
 
@@ -94,8 +97,11 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
     queue = [(0 , pacmanPos)]
     avoidPositions = []
     for i, j in myMaze.getGhostPositions(3 - pacman.getTeam()):
-        if (pacmanPos[1] == j and abs(pacmanPos[0] - i) < 3) or (pacmanPos[0] == i and abs(pacmanPos[1] - j) < 3) and (i, j) != dotPos:
+        if ((pacmanPos[1] == j and abs(pacmanPos[0] - i) < 3) or (pacmanPos[0] == i and abs(pacmanPos[1] - j) < 3) or (estimateEuristicCost(pacmanPos, (i,j)) < 7)) and (i, j) != dotPos:
             avoidPositions.append((i, j))
+            for di in range(-1, 2):
+                for dj in range(-1, 2):
+                    avoidPositions.append((i+di, j+dj))
 
     while queue:
         distance, curr = heapq.heappop(queue)
@@ -139,7 +145,7 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
 def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0):
     if not algo:
         algo = pacman.getTeam()
-    algos = [dijkstraFindShortestPathTo, aStarFindShortestPathTo]
+    algos = [dijkstraFindShortestPathTo, dijkstraFindShortestPathTo]
     dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
     way = algos[algo - 1](myMaze, pacman, closest)

@@ -7,12 +7,14 @@ import movingAlgorithms
 import time
 
 
-m = 50 # Number of columns
-n = 50 # Number of rows
-k = 4  # Number of ghosts and dots
+m = 25 # Number of columns
+n = 25 # Number of rows
+
+cherries = 8  # Number of ghosts and dots
+ghostsAmount = 4
 
 def main():
-    myMaze = maze.Maze(m, n, k, setSeed = True, seed = 13)
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 1488)#567
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -23,8 +25,8 @@ def main():
     screen = pygame.display.set_mode(((width + 2) * tileSize, (height + 5) * tileSize))
     pygame.display.set_caption("Pacman")
 
-    pacmans =  creatures.createPacmans()
-    ghosts =  creatures.createGhosts(k)
+    pacmans = creatures.createPacmans()
+    ghosts = creatures.createGhosts(ghostsAmount)
 
     visualization.initBoard(myMaze, screen, width, height)
     visualization.drawBorders(screen, width, height)
@@ -69,10 +71,13 @@ def main():
         visualization.redrawBoard(screen, myMaze, pacmans, ghosts, oldGhosts + oldPacmans)
         for pacman in pacmans:
             move = myMaze.checkMove(pacman)
-            if move == 0:
-                GAME = False
-            elif move == 1:
+            # if move == 0:
+            #     GAME = False
+            if move == 1:
                 myMaze.eatAndRespawnDot(pacman)
+            if move == 0 or pacman.getPoints() == myMaze.numberOfDots:
+                GAME = False
+
 
         if GHOST_MOVE_SWITCH:
             GHOST_MOVE_SWITCH = 0
@@ -85,11 +90,9 @@ def main():
         pygame.display.flip()
 
     print(f"Yellow : {pacmans[0].getPoints()} Red : {pacmans[1].getPoints()}")
-    time.sleep(3)
+    time.sleep(7)
     pygame.quit()
 
 
 if __name__ == '__main__':
     main()
-
-

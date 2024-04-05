@@ -39,6 +39,18 @@ class Pacman(Creature):
 class Ghost(Creature):
     def __init__(self, x: int, y: int, team: int) -> None:
         super().__init__(x, y, team)
+        self.cntInRow = 1
+        self._last_move = (0,-1)
+    
+    def getLastMove(self):
+        return self._last_move
+    
+    def setLastMove(self, move):
+        if move == self._last_move:
+            self.cntInRow += 1
+        else:
+            self.cntInRow = 1
+            self._last_move = move
 
 def createPacmans() -> list[Pacman]:
     pacmans = []

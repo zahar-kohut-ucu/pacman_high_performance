@@ -5,16 +5,18 @@ import pygame
 import creatures
 import movingAlgorithms
 import time
+import sys
 
+sys.setrecursionlimit(100000)
 
 m = 25 # Number of columns
 n = 25 # Number of rows
 
-cherries = 8  # Number of ghosts and dots
+cherries = 10  # Number of ghosts and dots
 ghostsAmount = 4
 
 def main():
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 1488)#567
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 2)#567
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -38,7 +40,7 @@ def main():
     pygame.display.flip()
 
     GAME = True
-    DELAY = 0.05
+    DELAY = 0.01
     GHOST_MOVE_SWITCH = 1
 
     while GAME:
@@ -57,8 +59,11 @@ def main():
 
         for pacman in pacmans:
             newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
-        for ghost in ghosts:
-            newGhostsPosition.append(movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans))
+        if GHOST_MOVE_SWITCH:
+            for ghost in ghosts:
+                newPos = movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans)
+                newGhostsPosition.append(newPos)
+                ghost.setLastMove((newPos[0] - ghost._x, newPos[1] - ghost._y))
 
         myMaze.changePacmansCoordinates(pacmans, newPacmanPositions)
         for pacman in pacmans:
@@ -90,7 +95,7 @@ def main():
         pygame.display.flip()
 
     print(f"Yellow : {pacmans[0].getPoints()} Red : {pacmans[1].getPoints()}")
-    time.sleep(7)
+    time.sleep(180)
     pygame.quit()
 
 

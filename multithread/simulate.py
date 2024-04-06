@@ -3,6 +3,7 @@ import creatures
 import movingAlgorithms
 import time
 import sys
+import multiprocessing.pool as pool
 
 sys.setrecursionlimit(100000)
 
@@ -13,20 +14,22 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
     
     pacmans = creatures.createPacmans()
     ghosts = creatures.createGhosts(ghostsAmount)
+    
+    myPool = pool.ThreadPool(processes=120)
 
     myMaze.spawnPacmans(pacmans)
     myMaze.spawnGhosts(ghosts)
     
     GAME = True
     GHOST_MOVE_SWITCH = 1
-    print("Game has started!")
+    print("Game started!")
     while GAME:
-        print('move')
+        print("Move!")
         newPacmanPositions = []
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myPool, myMaze, pacman))
         if GHOST_MOVE_SWITCH:
             for ghost in ghosts:
                 newPos = movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans)
@@ -47,7 +50,6 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
             #     GAME = False
             if move == 1:
                 myMaze.eatAndRespawnDot(pacman)
-                print("Dot found!")
             if move == 0 or pacman.getPoints() == myMaze.numberOfDots:
                 GAME = False
 
@@ -55,6 +57,8 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
             GHOST_MOVE_SWITCH = 0
         else:
             GHOST_MOVE_SWITCH = 1
+
+    myPool.close()
 
     if timeTest:
         return []

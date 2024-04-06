@@ -6,7 +6,7 @@ import creatures
 import movingAlgorithms
 import time
 import sys
-import threading
+import multiprocessing.pool as pool
 
 
 sys.setrecursionlimit(100000)
@@ -22,6 +22,8 @@ def main():
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
+    
+    myPool = pool.ThreadPool(processes=cherries)
 
     pygame.font.init()
     font = pygame.font.SysFont('freesansbold.ttf', 24)
@@ -61,7 +63,7 @@ def main():
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myPool, myMaze, pacman))
         if GHOST_MOVE_SWITCH:
             for ghost in ghosts:
                 newPos = movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans)

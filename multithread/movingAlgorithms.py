@@ -4,7 +4,9 @@ import heapq
 import creatures
 import maze
 import random
-import time
+import multiprocessing.pool as pool
+import time 
+import threading
 
 # Estimate euristic cost
 def estimateEuristicCost(start, end):
@@ -48,6 +50,8 @@ def escapeGhost(myMaze, pacmanPos, ghostPos):
 
 # Dijkstra
 def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
+    print(f"Dijkstra find started on {threading.get_ident()}!")
+    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -91,6 +95,8 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr] == distances[(i, j)] + 1:
                     curr = (i, j)
                     break
+        b = time.time()
+        print(f"Time for one way Dijkstra on {threading.get_ident()}:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -100,10 +106,14 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
+    b = time.time()
+    print(f"Time for one way Dijkstra on {threading.get_ident()}:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 
 def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
+    print(f"AStart find started on {threading.get_ident()}!")
+    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -155,6 +165,8 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr][0] == distances[(i, j)][0] + 1:
                     curr = (i, j)
                     break
+        b = time.time()
+        print(f"Time for one way AStar on {threading.get_ident()}:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -164,21 +176,34 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
+    b = time.time()
+    print(f"Time for one way AStar on {threading.get_ident()}:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 # Returns new Pacman position
 
-def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0):
+def getNextPacmanMove(mpool: pool.ThreadPool, myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0):
     if not algo:
         algo = pacman.getTeam()
     algos = [dijkstraFindShortestPathTo, aStarFindShortestPathTo]
     dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
-    closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
-    way = algos[algo - 1](myMaze, pacman, closest)
-    try:
-        nextMove = way[0]
-    except IndexError:
-        time.sleep(20)
+    
+    items = [(myMaze, pacman, dot) for dot in dots]
+
+    minLength = float("inf")
+    chosenWay = None
+    a = time.time()
+    result = mpool.starmap_async(algos[algo - 1], items)
+    ways = result.get()
+    b = time.time()
+    print("Time to find a way:", b - a)
+    for way in ways:
+        length = len(way)
+        if length < minLength:
+            minLength = length
+            chosenWay = way
+
+    nextMove = chosenWay[0]
     return nextMove
 
 # Returns new ghost position

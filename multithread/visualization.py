@@ -12,7 +12,7 @@ def drawTile(screen: pygame.Surface, tile: node.Node, tileSize: int = 20):
     if  team < 1:
         team = ''
 
-    iconImage = pygame.image.load(f"src/icons/{str(tile.getState())}{team}.png")
+    iconImage = pygame.image.load(f"multithread/icons/{str(tile.getState())}{team}.png")
     screen.blit(iconImage, ((y + 1) * tileSize, (x + 1) * tileSize))
     
 
@@ -25,11 +25,11 @@ def initBoard(maze: maze.Maze, screen: pygame.Surface, width: int, height: int, 
 
 def drawBorders(screen: pygame.Surface, width: int, height: int, tileSize: int = 20):
     for x in range(height+2):
-        iconImage = pygame.image.load(f"src/icons/wall.png")
+        iconImage = pygame.image.load(f"multithread/icons/wall.png")
         screen.blit(iconImage, (0, x * tileSize))
         screen.blit(iconImage, ((width + 1) * tileSize, x * tileSize))
     for y in range(width+2):
-        iconImage = pygame.image.load(f"src/icons/wall.png")
+        iconImage = pygame.image.load(f"multithread/icons/wall.png")
         screen.blit(iconImage, (y * tileSize, 0))
         screen.blit(iconImage, (y * tileSize, (height + 1) * tileSize))
 
@@ -37,12 +37,12 @@ def drawBorders(screen: pygame.Surface, width: int, height: int, tileSize: int =
 def spawnCreatures(screen: pygame.Surface, ghosts: list, pacmans: list, tileSize: int = 20):
     for ghost in ghosts:
         x, y = ghost.getCoordinates()
-        iconImage = pygame.image.load(f"src/icons/ghost{ghost.getTeam()}.png")
+        iconImage = pygame.image.load(f"multithread/icons/ghost{ghost.getTeam()}.png")
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
     
     for pacman in pacmans:
         x, y = pacman.getCoordinates()
-        iconImage = pygame.image.load(f"src/icons/pacman{pacman.getTeam()}.png")
+        iconImage = pygame.image.load(f"multithread/icons/pacman{pacman.getTeam()}.png")
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
 
 
@@ -59,12 +59,12 @@ def redrawBoard(screen: pygame.Surface, maze: maze.Maze, pacmans, ghosts, coords
 
     for ghost in ghosts:
         x, y = ghost.getCoordinates()
-        iconImage = pygame.image.load(f"src/icons/ghost{ghost.getTeam()}.png")
+        iconImage = pygame.image.load(f"multithread/icons/ghost{ghost.getTeam()}.png")
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
     
     for pacman in pacmans:
         x, y = pacman.getCoordinates()
-        iconImage = pygame.image.load(f"src/icons/pacman{pacman.getTeam()}.png")
+        iconImage = pygame.image.load(f"multithread/icons/pacman{pacman.getTeam()}.png")
         screen.blit(iconImage, ((y + 1)*tileSize, (x + 1)*tileSize))
 
 # def eatDot(self, maze)

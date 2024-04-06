@@ -17,6 +17,7 @@ def isValid(myMaze, i, j, team = 0):
         return 0 <= i < myMaze.trueM and 0 <= j < myMaze.trueN//2 and str(myMaze.getNode(i, j).getState()) != "wall"
     else:
         return 0 <= i < myMaze.trueM and myMaze.trueN//2 < j < myMaze.trueN and str(myMaze.getNode(i, j).getState()) != "wall"
+
 # Return random valid move
 def allValidMoves(myMaze, position, team = 0):
     allMoves = [(position[0] - 1, position[1]), (position[0] + 1, position[1]), (position[0], position[1] - 1), (position[0], position[1] + 1)]
@@ -45,9 +46,9 @@ def escapeGhost(myMaze, pacmanPos, ghostPos):
                 bestMove = move
         return bestMove
 
-
 # Dijkstra
 def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
+    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -91,6 +92,8 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr] == distances[(i, j)] + 1:
                     curr = (i, j)
                     break
+        b = time.time()
+        print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -100,10 +103,13 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
+    b = time.time()
+    print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
-
+#AStar
 def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
+    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -155,6 +161,8 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr][0] == distances[(i, j)][0] + 1:
                     curr = (i, j)
                     break
+        b = time.time()
+        print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -164,6 +172,8 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
+    b = time.time()
+    print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 # Returns new Pacman position
@@ -173,8 +183,11 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0
         algo = pacman.getTeam()
     algos = [dijkstraFindShortestPathTo, aStarFindShortestPathTo]
     dots = list(filter(lambda dot: myMaze.getNode(*dot).getTeam() != pacman.getTeam(), myMaze.getDotsPosition()))
+    a = time.time()
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
     way = algos[algo - 1](myMaze, pacman, closest)
+    b = time.time()
+    print(b - a)
     try:
         nextMove = way[0]
     except IndexError:

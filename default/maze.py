@@ -26,7 +26,6 @@ class Maze:
         self.breakWalls(numberOfBroken)
         self.spawnDots()
         self.mazeExtend()
-        # self.wallExtend()
 
     def getDotsPosition(self):
         return self._dotsPosition
@@ -70,7 +69,6 @@ class Maze:
     
     def breakWalls(self, n: int):
         go = n
-        checked = set()
         while go:
             i, j = random.randint(1, self.m - 2), random.randint(1, self.n - 2)
             if str(self.getNode(i, j).getState()) == "wall":
@@ -82,23 +80,7 @@ class Maze:
                     self.getNode(i, j).changeState(2)
                     self._freePositions.append((i, j))
                     go -= 1
-            
-
-    def breakWalls(self, n: int):
-        go = n
-        checked = set()
-        while go:
-            i, j = random.randint(1, self.m - 2), random.randint(1, self.n - 2)
-            if str(self.getNode(i, j).getState()) == "wall":
-                up = str(self.getNode(i + 1, j).getState()) == "wall"
-                down = str(self.getNode(i - 1, j).getState()) == "wall"
-                left = str(self.getNode(i, j - 1).getState()) == "wall"
-                right = str(self.getNode(i, j + 1).getState()) == "wall"
-                if ((up and down) and not (left or right)) or ((left and right) and not (up or down)):
-                    self.getNode(i, j).changeState(2)
-                    self._freePositions.append((i, j))
-                    go -= 1
-            
+                        
     def spawnDots(self, n: int = 0, team: int = 1):
         if n == 0:
             n = self.numberOfDots

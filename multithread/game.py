@@ -6,6 +6,8 @@ import creatures
 import movingAlgorithms
 import time
 import sys
+import threading
+
 
 sys.setrecursionlimit(100000)
 
@@ -16,7 +18,7 @@ cherries = 10  # Number of ghosts and dots
 ghostsAmount = 4
 
 def main():
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 2)#567
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 2)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -35,7 +37,7 @@ def main():
 
     myMaze.spawnPacmans(pacmans)
     myMaze.spawnGhosts(ghosts)
-
+    
     visualization.spawnCreatures(screen, ghosts, pacmans)
     pygame.display.flip()
 
@@ -44,6 +46,7 @@ def main():
     GHOST_MOVE_SWITCH = 1
 
     while GAME:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -88,6 +91,7 @@ def main():
             GHOST_MOVE_SWITCH = 0
         else:
             GHOST_MOVE_SWITCH = 1
+        
         text = font.render("Pac 1: " + str(pacmans[0].getPoints()) + " Pac 2: " + str(pacmans[1].getPoints()), True, (0, 255, 0))
         refresher = pygame.Rect(0, (height + 3) * tileSize, tileSize * width, tileSize * 2)
         pygame.draw.rect(screen, (0, 0, 0), refresher)

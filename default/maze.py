@@ -24,7 +24,7 @@ class Maze:
         # generate maze
         self.generateMaze(self.getNode(random.randint(0, m - 1), self.n - 1))
         self.breakWalls(numberOfBroken)
-        self.spawnDots()
+        self.spawnDots(numberOfDots)
         self.mazeExtend()
 
     def getDotsPosition(self):
@@ -81,27 +81,13 @@ class Maze:
                     self._freePositions.append((i, j))
                     go -= 1
                         
-    def spawnDots(self, n: int = 0, team: int = 1):
-        if n == 0:
-            n = self.numberOfDots
-        if self._dotsPosition == []:
-            self._dotsPosition = random.sample(self._freePositions, min(len(self._freePositions), n))
-            for i, j in self._dotsPosition:
-                self.getNode(i, j).changeState(3)
-                self.getNode(i, j)._team = team
-        else:
-            choice = random.choice(self._freePositions)
-            while self.getNode(*choice).isTaken():
-                choice = random.choice(self._freePositions)
-
-            self._dotsPosition.append(choice)
-            self._freePositions.remove(choice)
-            self.getNode(*choice).changeState(3)
-            self.getNode(*choice)._team = team
-
-
-
-
+    def spawnDots(self, n: int, team: int = 1):
+    
+        self._dotsPosition = random.sample(self._freePositions, min(len(self._freePositions), n))
+        for i, j in self._dotsPosition:
+            self.getNode(i, j).changeState(3)
+            self.getNode(i, j)._team = team
+    
     def mazeExtend(self):
         for i in range(self.m):
             self._maze[i].append(node.Node(i, self.n, 0, node.nodeStates.freeState))

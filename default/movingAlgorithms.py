@@ -93,7 +93,7 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                     curr = (i, j)
                     break
         b = time.time()
-        print("Time for one way:", b - a)
+        # print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -104,7 +104,7 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
             closestGhost = ghost
             closestDist = dist
     b = time.time()
-    print("Time for one way:", b - a)
+    # print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 #AStar
@@ -162,7 +162,7 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                     curr = (i, j)
                     break
         b = time.time()
-        print("Time for one way:", b - a)
+        # print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -173,7 +173,7 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
             closestGhost = ghost
             closestDist = dist
     b = time.time()
-    print("Time for one way:", b - a)
+    # print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 # Returns new Pacman position

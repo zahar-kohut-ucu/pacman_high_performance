@@ -12,11 +12,12 @@ sys.setrecursionlimit(100000)
 m = 25 # Number of columns
 n = 25 # Number of rows
 
-cherries = 10  # Number of ghosts and dots
+cherries = 70  # Number of ghosts and dots
 ghostsAmount = 4
 
 def main():
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 2)
+    start = time.time()
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 22)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -97,7 +98,9 @@ def main():
         pygame.display.flip()
 
     print(f"Yellow : {pacmans[0].getPoints()} Red : {pacmans[1].getPoints()}")
-    time.sleep(180)
+    end = time.time()
+    print(end - start)
+    time.sleep(7)
     pygame.quit()
 
 

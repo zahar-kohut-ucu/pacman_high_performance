@@ -61,4 +61,5 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
     elif winTest:
         return (pacmans[0].getPoints(), pacmans[1].getPoints()) 
 
-print(simulate(200, 200, 4, 4, 4000))
+if __name__ == "__main__":
+    print(simulate(200, 200, 4, 500, 4000))

@@ -19,8 +19,6 @@ class Maze:
         self.numberOfDots = numberOfDots
 
         self.maze = np.ones((n,m), dtype=int)
-        self.graphRepresantation = None
-        self.posNodeDict = {}
 
         self.freePositions = set()
 
@@ -37,8 +35,6 @@ class Maze:
         self.breakWalls(numberOfBroken)
         self.spawnDots(self.numberOfDots)
         self.mazeExtend()
-        self.makeGraphRepresantation()
-        
 
     def generateMaze(self, i, j):
         self.maze[i][j] = 0
@@ -86,9 +82,6 @@ class Maze:
         tempFree = copy.copy(self.freePositions)
         for i, j in tempFree:
             self.freePositions.add((i, self.trueN - j - 1))
-        
-        for j in range(self.trueN):
-            self.freePositions.add((self.m, j))
 
         tempDots = copy.copy(self.dotsPosition)
         for i, j in tempDots:
@@ -121,24 +114,6 @@ class Maze:
                             self.ghostsPosition1.add((x, y))
                         counter -= 1
                         break
-
-    def makeGraphRepresantation(self):
-        dim = len(self.freePositions)
-        self.graphRepresantation = np.zeros((dim, dim), dtype=int)
-        ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-        for pos in self.freePositions:
-            if pos not in self.posNodeDict:
-                ind = len(self.posNodeDict)
-                self.posNodeDict[pos] = ind
-            i, j = pos[0], pos[1]
-            for di, dj in ways:
-                neiPos = i + di, j + dj
-                if neiPos in self.freePositions:
-                    if neiPos not in self.posNodeDict:
-                        ind = len(self.posNodeDict)
-                        self.posNodeDict[neiPos] = ind
-                    if self.graphRepresantation[self.posNodeDict[neiPos]][self.posNodeDict[pos]] == 0:
-                        self.graphRepresantation[self.posNodeDict[pos]][self.posNodeDict[neiPos]] = 1
 
     def clearGhostPositions(self):
         self.ghostsPosition1.clear()

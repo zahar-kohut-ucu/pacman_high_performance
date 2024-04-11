@@ -1,0 +1,224 @@
+# Moving algorithm
+# Imports
+import numpy as np
+from scipy.sparse.csgraph import shortest_path
+import random
+import time
+
+# Estimate euristic cost
+
+def estimateEuristicCost(start, end):
+    return abs(start[0] - end[0]) + abs(start[1] - end[1])
+
+
+def isValid(mymaze, trueM, trueN, i, j, team = 0):
+    if not team:
+        return 0 <= i < trueM and 0 <= j < trueN and mymaze[i][j] != 1
+    elif team == 1:
+        return 0 <= i < trueM and 0 <= j < trueN//2 and mymaze[i][j] != 1
+    else:
+        return 0 <= i < trueM and trueN//2 < j < trueN and mymaze[i][j] != 1
+
+# Return random valid move
+
+def allValidMoves(mymaze, trueM, trueN, position, team = 0):
+    allMoves = [(position[0] - 1, position[1]), (position[0] + 1, position[1]), (position[0], position[1] - 1), (position[0], position[1] + 1)]
+    possMoves = []
+    for i, j in allMoves:
+        if isValid(mymaze, trueM, trueN, i, j, team):
+            possMoves.append((i, j))
+    return possMoves
+
+# Escaping ghost logic
+
+def escapeGhost(mymaze, trueM, trueN, pacmanPos, ghostPos):
+    hor = (pacmanPos[0], pacmanPos[1] - 1 + 2 * (pacmanPos[1] > ghostPos[1]))
+    ver = (pacmanPos[0] - 1 + 2 * (pacmanPos[0] > ghostPos[0]), pacmanPos[1])
+    if pacmanPos[0] == ghostPos[0] and isValid(mymaze, trueM, trueN, hor[0], hor[1]):
+        return hor
+    elif pacmanPos[1] == ghostPos[1] and isValid(mymaze, trueM, trueN, ver[0], ver[1]):
+        return ver
+    else:
+        validMoves = allValidMoves(mymaze, trueM, trueN, pacmanPos)
+        maxDistance = -1
+        bestMove = None
+        for move in validMoves:
+            distance = estimateEuristicCost(ghostPos, move)
+            if distance > maxDistance:
+                maxDistance = distance
+                bestMove = move
+        return bestMove
+
+# Dijkstra
+def dijkstraFindShortestPathTo(myMaze, pacman, dotPos):
+    target = myMaze.posNodeDict[dotPos]
+    ghostsPos = myMaze.ghostsPosition1 if pacman[2] == 2 else myMaze.ghostsPosition2
+    avoidPositions = []
+    for i, j in ghostsPos:
+        if ((pacman[1] == j and abs(pacman[0] - i) < 5) or (pacman[0] == i and abs(pacman[1] - j) < 5) or (estimateEuristicCost((pacman[0], pacman[1]), (i,j)) < 7)):
+            avoidPositions.append((i, j))
+            for di in range(-1, 2):
+                for dj in range(-1, 2):
+                    avoidPositions.append((i+di, j+dj))
+    
+    graph = np.copy(myMaze.graphRepresantation)
+    for avoidPos in avoidPositions:
+        i, j = avoidPos[0], avoidPos[1]
+        if (i, j) in myMaze.freePositions and (i + 1, j) in myMaze.freePositions and (i - 1, j) in myMaze.freePositions:
+            up, down = myMaze.posNodeDict[(i - 1, j)], myMaze.posNodeDict[(i + 1, j)]
+            graph[up][down], graph[down][up] = 0, 0 
+
+        if (i, j) in myMaze.freePositions and (i + 1, j) in myMaze.freePositions and (i - 1, j) in myMaze.freePositions:
+            right, left = myMaze.posNodeDict[(i, j + 1)], myMaze.posNodeDict[(i, j - 1)]
+            graph[right][left], graph[left][right] = 0, 0 
+    
+    _, predecessors = shortest_path(graph, indices=myMaze.posNodeDict[(pacman[0], pacman[1])], return_predecessors=True)
+    path = [target]
+    while predecessors[target] != -9999:  # -9999 indicates no predecessor
+        path.insert(0, predecessors[target])
+        target = predecessors[target]
+    
+
+#AStar
+
+# def aStarFindShortestPathTo(mymaze, ghostsPosition, trueM, trueN, pacman, dotPos):
+#     visited = set()
+#     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+#     pacmanPos = (pacman[0], pacman[1])
+#     distances = {pacmanPos: [0, estimateEuristicCost(pacmanPos, dotPos)]}
+#     queue = [(estimateEuristicCost(pacmanPos, dotPos), 0, pacmanPos)]
+#     avoidPositions = []
+#     for i, j in ghostsPosition:
+#         if (pacman[1] == j and abs(pacman[0] - i) < 5) or (pacman[0] == i and abs(pacman[1] - j) < 5) or (estimateEuristicCost(pacmanPos, (i,j)) < 7):
+#             avoidPositions.append((i, j))
+#             for di in range(-1, 2):
+#                 for dj in range(-1, 2):
+#                     avoidPositions.append((i+di, j+dj))
+
+#     while queue:
+#         _, distance, curr = heapq.heappop(queue)
+
+#         if curr == dotPos:
+#             break
+
+#         if curr in visited:
+#             continue
+
+#         visited.add(curr)
+
+#         for di, dj in ways:
+#             i, j = curr[0] + di, curr[1] + dj
+#             if  0 <= i < trueM and 0 <= j < trueN and mymaze[i][j] != 1 and (i,j) not in avoidPositions:
+#                 neighbour = (i, j)
+#                 newDistance = distance + 1
+#                 priority = newDistance + estimateEuristicCost(neighbour, dotPos)
+#                 if neighbour not in distances:
+#                     distances[neighbour] = [0, 0]
+#                     distances[neighbour][0] = newDistance
+#                     distances[neighbour][1] = priority
+#                     heapq.heappush(queue, (priority, newDistance, neighbour))
+#                 elif priority < distances[neighbour][1]:
+#                     distances[neighbour][0] = newDistance
+#                     distances[neighbour][1] = priority
+#                     heapq.heappush(queue, (priority, newDistance, neighbour))
+
+#     way = []
+#     curr = dotPos
+#     if curr in distances:
+#         while curr != pacmanPos:
+#             way.append(curr)
+#             for di, dj in ways:
+#                 i, j = curr[0] - di, curr[1] - dj
+#                 if (i, j) in distances and distances[curr][0] == distances[(i, j)][0] + 1:
+#                     curr = (i, j)
+#                     break
+#         return way[::-1]
+    
+#     closestDist = 1e10
+#     closestGhost = None
+#     for ghost in ghostsPosition:
+#         dist = estimateEuristicCost(pacmanPos, ghost)
+#         if dist < closestDist:
+#             closestGhost = ghost
+#             closestDist = dist
+#     return [escapeGhost(mymaze, trueM, trueN, pacmanPos, closestGhost)]
+
+# Returns new Pacman position
+
+def getNextPacmanMove(myMaze, pacman, algo: int = 0):
+    if not algo:
+        algo = pacman[2]
+    algos = [dijkstraFindShortestPathTo, dijkstraFindShortestPathTo]
+    dots = myMaze.yellowDotsPosition if algo == 1 else myMaze.redDotsPosition
+    ghostsPos = myMaze.ghostsPosition1 if pacman[2] == 2 else myMaze.ghostsPosition2
+    a = time.time()
+    shortest = float("inf")
+    chosenWay = None
+    for dot in dots:
+        way = algos[algo - 1](myMaze, pacman, dot)
+        if way and len(way) < shortest:
+            chosenWay = way
+    if not chosenWay:
+        closestDist = float("inf")
+        closestGhost = None
+        for ghost in ghostsPos:
+            dist = estimateEuristicCost((pacman[0], pacman[1]), ghost)
+            if dist < closestDist:
+                closestGhost = ghost
+                closestDist = dist
+        chosenWay = [escapeGhost(myMaze.maze, myMaze.trueM, myMaze.trueN, (pacman[0], pacman[1]), closestGhost)]
+    b = time.time()
+    print(b - a)
+    nextMove = chosenWay[0]
+    return nextMove
+
+# Returns new ghost position
+def getGhostNextMove(mymaze, trueM, trueN, ghost, pacmans):
+    # look for Pacman
+    enemyPacman = pacmans[0] if pacmans[0][2] != ghost[2] else pacmans[1]
+    horFound = True if ghost[0] == enemyPacman[0] else False
+    for j in range(min(ghost[1], enemyPacman[1]) + 1, max(ghost[1], enemyPacman[1])):
+        if horFound:
+            if mymaze[ghost[0]][j] != 1:
+                continue
+            else:
+                horFound = False
+        else:
+            break
+
+    verFound = True if ghost[1] == enemyPacman[1] and not horFound else False
+    for i in range(min(ghost[0], enemyPacman[0]) + 1, max(ghost[0], enemyPacman[0])):
+        if verFound:
+            if mymaze[i][ghost[1]] != 1:
+                continue
+            else:
+                verFound = False
+        else:
+            break
+    # choose move
+    if horFound:
+        chaseMove = (ghost[0], ghost[1] - 1 + 2 * (ghost[1] < enemyPacman[1]))
+        if isValid(mymaze, trueM, trueN, *chaseMove, ghost[2]):
+            return chaseMove
+    if verFound:
+        chaseMove = (ghost[0] - 1 + 2 * (ghost[0] < enemyPacman[0]), ghost[1])
+        if isValid(mymaze, trueM, trueN, *chaseMove, ghost[2]):
+            return chaseMove 
+    
+    last_move = (ghost[4], ghost[5])
+    valid  = allValidMoves(mymaze, trueM, trueN, (ghost[0], ghost[1]), ghost[2])
+    validNorm = [(i - ghost[0], j - ghost[1]) for i, j in valid]
+    unwntdMove = (last_move[0]*-1, last_move[1]*-1)
+    if unwntdMove in validNorm and len(valid) > 1:
+        trashhold = min(ghost[3], 88)/(88*len(validNorm))
+        proc = random.random()
+        if proc < trashhold:
+            return (ghost[0] + unwntdMove[0], ghost[1] + unwntdMove[1])
+        validNorm.remove(unwntdMove)
+        valid = [(ghost[0] + i, ghost[1] + j) for i, j in validNorm]
+    return random.choice(valid)
+
+
+
+
+

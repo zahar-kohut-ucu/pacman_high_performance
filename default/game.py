@@ -9,15 +9,16 @@ import sys
 
 sys.setrecursionlimit(100000)
 
-m = 15 # Number of columns
-n = 15 # Number of rows
+m = 25 # Number of columns
+n = 25 # Number of rows
 
-cherries = 1  # Number of ghosts and dots
-ghostsAmount = 1
+cherries = 15  # Number of ghosts and dots
+ghostsAmount = 14
+numOfBroken = 50
 
 def main():
     start = time.time()
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, setSeed = True, seed = 22)
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken=numOfBroken, setSeed = True, seed = 22)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -43,7 +44,7 @@ def main():
     GAME = True
     DELAY = 0.01
     GHOST_MOVE_SWITCH = 1
-
+    print("g")
     while GAME:
 
         for event in pygame.event.get():

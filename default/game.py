@@ -9,11 +9,11 @@ import sys
 
 sys.setrecursionlimit(100000)
 
-m = 25 # Number of columns
-n = 25 # Number of rows
+m = 15 # Number of columns
+n = 15 # Number of rows
 
-cherries = 70  # Number of ghosts and dots
-ghostsAmount = 4
+cherries = 1  # Number of ghosts and dots
+ghostsAmount = 1
 
 def main():
     start = time.time()
@@ -39,7 +39,7 @@ def main():
     
     visualization.spawnCreatures(screen, ghosts, pacmans)
     pygame.display.flip()
-
+    
     GAME = True
     DELAY = 0.01
     GHOST_MOVE_SWITCH = 1

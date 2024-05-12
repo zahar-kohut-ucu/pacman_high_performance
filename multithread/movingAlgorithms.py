@@ -49,7 +49,6 @@ def escapeGhost(myMaze, pacmanPos, ghostPos):
 
 # Dijkstra
 def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
-    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -93,7 +92,6 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr] == distances[(i, j)] + 1:
                     curr = (i, j)
                     break
-        b = time.time()
         return way[::-1]
     
     closestDist = float("inf")
@@ -103,12 +101,10 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
-    b = time.time()
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 
 def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
-    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -160,7 +156,6 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr][0] == distances[(i, j)][0] + 1:
                     curr = (i, j)
                     break
-        b = time.time()
         return way[::-1]
     
     closestDist = float("inf")
@@ -170,7 +165,6 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
-    b = time.time()
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 # Returns new Pacman position
@@ -197,8 +191,10 @@ def getNextPacmanMove(mypool, myMaze: maze.Maze, pacman: creatures.Pacman, thrds
     res = mypool.starmap_async(algos[algo - 1], items)
     ways = res.get()
     b = time.time()
-    # func = "Djikstra" if (algo == 1) else "A-star" 
-    # print(f'Time to find a way using {func}: {b - a}')
+    if algo == 1:
+        print("Dijksta's:", b - a)
+    else:
+        print("A-star:", b - a)
     for way in ways:
         length = len(way)
         if length < minLength:

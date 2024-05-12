@@ -19,9 +19,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
     
     GAME = True
     GHOST_MOVE_SWITCH = 1
-    print("Game has started!")
     while GAME:
-        print('move')
         newPacmanPositions = []
         newGhostsPosition = []
 
@@ -47,7 +45,6 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
             #     GAME = False
             if move == 1:
                 myMaze.eatAndRespawnDot(pacman)
-                print("Dot found!")
             if move == 0 or pacman.getPoints() == myMaze.numberOfDots:
                 GAME = False
 
@@ -62,4 +59,4 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
         return (pacmans[0].getPoints(), pacmans[1].getPoints()) 
 
 if __name__ == "__main__":
-    print(simulate(200, 200, 4, 500, 4000))
+    print(simulate(200, 200, 4, 100, 4000))

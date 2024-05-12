@@ -175,7 +175,10 @@ def getNextPacmanMove(myMaze, pacman, algo: int = 0):
                 closestDist = dist
         chosenWay = [escapeGhost(myMaze.maze, (pacman[0], pacman[1]), closestGhost)]
     b = time.time()
-    print("Pacman move time:", b - a)
+    if algo == 1:
+        print("Dijksta's:", b - a)
+    else:
+        print("A-star:", b - a)    
     nextMove = chosenWay[0]
     return nextMove
 

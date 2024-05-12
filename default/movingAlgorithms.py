@@ -48,7 +48,6 @@ def escapeGhost(myMaze, pacmanPos, ghostPos):
 
 # Dijkstra
 def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
-    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -92,8 +91,6 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr] == distances[(i, j)] + 1:
                     curr = (i, j)
                     break
-        b = time.time()
-        # print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -103,13 +100,10 @@ def dijkstraFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
-    b = time.time()
-    # print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 #AStar
 def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
-    a = time.time()
     visited = set()
     ways = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     pacmanPos = pacman.getCoordinates()
@@ -161,8 +155,6 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
                 if (i, j) in distances and distances[curr][0] == distances[(i, j)][0] + 1:
                     curr = (i, j)
                     break
-        b = time.time()
-        # print("Time for one way:", b - a)
         return way[::-1]
     
     closestDist = float("inf")
@@ -172,8 +164,6 @@ def aStarFindShortestPathTo(myMaze: maze.Maze, pacman, dotPos):
         if dist < closestDist:
             closestGhost = ghost
             closestDist = dist
-    b = time.time()
-    # print("Time for one way:", b - a)
     return [escapeGhost(myMaze, pacmanPos, closestGhost)]
 
 # Returns new Pacman position
@@ -187,7 +177,10 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
     way = algos[algo - 1](myMaze, pacman, closest)
     b = time.time()
-    print(b - a)
+    if algo == 1:
+        print("Dijksta's:", b - a)
+    else:
+        print("A-star:", b - a)
     try:
         nextMove = way[0]
     except IndexError:

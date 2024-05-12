@@ -6,7 +6,7 @@ import random
 
 
 class Maze:
-    def __init__(self, m: int = 35, n: int = 35, ghostsAmount = 0, numberOfDots: int = 1000000000000, numberOfBroken = 52, setSeed: bool = False, seed: int = 100):
+    def __init__(self, m: int = 35, n: int = 35, ghostsAmount = 0, numberOfDots: int = 1000000000000, numberOfBroken = 20, setSeed: bool = False, seed: int = 100):
         if setSeed:
             random.seed(seed)
         self.m = m

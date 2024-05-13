@@ -30,7 +30,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myPool, myMaze, pacman))
         if GHOST_MOVE_SWITCH:
             for ghost in ghosts:
                 newPos = movingAlgorithms.getGhostNextMove(myMaze.maze, ghost, pacmans)

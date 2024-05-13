@@ -8,9 +8,7 @@ from multiprocessing import Pool
 
 sys.setrecursionlimit(100000)
 
-a = time.time()
-
-def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest = False):
+def simulate(m, n, ghostsAmount, cherries, numOfBroken):
     THRDS = 4
     myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 2)
     
@@ -24,6 +22,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
     
     GAME = True
     GHOST_MOVE_SWITCH = 1
+    a = time.time()
     while GAME:
         newPacmanPositions = []
         newGhostsPosition = []
@@ -59,12 +58,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
             GHOST_MOVE_SWITCH = 1
 
     myPool.close()
+    b = time.time()
+    return (pacmans[0].getPoints(), pacmans[1].getPoints(), b - a) 
 
-    if timeTest:
-        return []
-    elif winTest:
-        return (pacmans[0].getPoints(), pacmans[1].getPoints()) 
-
-
-if __name__ == "__main__":
-    print(simulate(200, 200, 4, 100, 4000))
+#print(simulate(200, 200, 4, 100, 4000))

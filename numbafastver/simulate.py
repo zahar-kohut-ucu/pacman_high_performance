@@ -7,9 +7,6 @@ import sys
 
 sys.setrecursionlimit(100000)
 
-
-a = time.time()
-
 def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest = False):
     myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 2)
     pacmans = creatures.createPacmans()
@@ -20,6 +17,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
 
     GAME = True
     GHOST_MOVE_SWITCH = 1
+    a = time.time()
     while GAME:
         newPacmanPositions = []
         newGhostsPosition = []
@@ -56,10 +54,7 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, winTest = True, timeTest
             GHOST_MOVE_SWITCH = 0
         else:
             GHOST_MOVE_SWITCH = 1
+    b = time.time()
+    return (pacmans[0].getPoints(), pacmans[1].getPoints(), b - a) 
 
-    if timeTest:
-        return []
-    elif winTest:
-        return (pacmans[0].getPoints(), pacmans[1].getPoints()) 
-
-print(simulate(200, 200, 4, 30, 4000))
+#print(simulate(200, 200, 4, 30, 4000))

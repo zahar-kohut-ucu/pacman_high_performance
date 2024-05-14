@@ -17,7 +17,7 @@ ghostsAmount = 4
 numOfBroken = 50
 
 def main():
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 2)
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 3)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
@@ -103,7 +103,7 @@ def main():
         pygame.display.flip()
 
     print(f"Yellow : {pacmans[0][4]} Red : {pacmans[1][4]}")
-    time.sleep(180)
+    time.sleep(5)
     pygame.quit()
 
 if __name__ == "__main__":

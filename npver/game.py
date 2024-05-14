@@ -12,9 +12,9 @@ sys.setrecursionlimit(100000)
 m = 25 # Number of columns
 n = 25 # Number of rows
 
-cherries = 1  # Number of ghosts and dots
-ghostsAmount = 1
-numOfBroken = 1
+cherries = 70  # Number of ghosts and dots
+ghostsAmount = 4
+numOfBroken = 50
 
 def main():
     myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 2)

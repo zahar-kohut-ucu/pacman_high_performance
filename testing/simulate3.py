@@ -1,16 +1,16 @@
 import numpy as np
-import maze
-import creatures
-import movingAlgorithms
+import maze3 as maze3
+import creatures3 as creatures3
+import movingAlgorithms3 as movingAlgorithms3
 import time
 import sys
 
 sys.setrecursionlimit(100000)
 
 def simulate(m, n, ghostsAmount, cherries, numOfBroken, sed, winTest = True, timeTest = False):
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = sed)
-    pacmans = creatures.createPacmans()
-    ghosts = creatures.createGhosts(ghostsAmount)
+    myMaze = maze3.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = sed)
+    pacmans = creatures3.createPacmans()
+    ghosts = creatures3.createGhosts(ghostsAmount)
 
     myMaze.spawnPacmans(pacmans)
     myMaze.spawnGhosts(ghosts)
@@ -23,10 +23,10 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, sed, winTest = True, tim
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms3.getNextPacmanMove(myMaze, pacman))
         if GHOST_MOVE_SWITCH:
             for ghost in ghosts:
-                newPos = movingAlgorithms.getGhostNextMove(myMaze.maze, ghost, pacmans)
+                newPos = movingAlgorithms3.getGhostNextMove(myMaze.maze, ghost, pacmans)
                 newGhostsPosition.append(newPos)
                 if (newPos[0] - ghost[0]) == ghost[4] and (newPos[1] - ghost[1]) == ghost[5]:
                     ghost[3] += 1
@@ -55,6 +55,6 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken, sed, winTest = True, tim
         else:
             GHOST_MOVE_SWITCH = 1
     b = time.time()
-    return (pacmans[0][-1], pacmans[1][-1], b - a) 
+    return [pacmans[0][-1], pacmans[1][-1], b - a]
 
-print(simulate(25, 25, 4, 70, 50, 2))
+# print(simulate(25, 25, 4, 70, 50, 2))

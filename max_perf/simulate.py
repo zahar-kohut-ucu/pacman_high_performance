@@ -9,11 +9,11 @@ from multiprocessing import Pool
 
 sys.setrecursionlimit(100000)
 
-def simulate(m, n, ghostsAmount, cherries, numOfBroken):
+def simulate(m, n, ghostsAmount, cherries, numOfBroken, sed):
     THRDS = 4
     myPool = Pool(processes=THRDS)
     
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = 2)
+    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = sed)
     pacmans = creatures.createPacmans()
     ghosts = creatures.createGhosts(ghostsAmount)
 
@@ -60,6 +60,6 @@ def simulate(m, n, ghostsAmount, cherries, numOfBroken):
         else:
             GHOST_MOVE_SWITCH = 1
     b = time.time()
-    return (pacmans[0].getPoints(), pacmans[1].getPoints(), b - a) 
+    return (pacmans[0][-1], pacmans[1][-1], b - a) 
 
-#print(simulate(200, 200, 4, 30, 4000))
+print(simulate(25, 25, 4, 70, 50, 2))

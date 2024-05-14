@@ -13,7 +13,7 @@ sys.setrecursionlimit(100000)
 m = 25 # Number of columns
 n = 25 # Number of rows
 
-cherries = 10  # Number of ghosts and dots
+cherries = 70  # Number of ghosts and dots
 ghostsAmount = 4
 numOfBroken = 50
 

@@ -1,27 +1,33 @@
 # Imports
-import maze
-import visualization
+import maze2 as maze2
+import visualization2 as visualization2
 import pygame
-import creatures
-import movingAlgorithms
+import creatures2 as creatures2
+import movingAlgorithms2 as movingAlgorithms2
 import time
 import sys
+from multiprocessing import Pool
+
 
 sys.setrecursionlimit(100000)
 
-m = 30 # Number of columns
-n = 30 # Number of rows
+m = 25 # Number of columns
+n = 25 # Number of rows
 
-cherries = 30  # Number of ghosts and dots
+cherries = 70  # Number of ghosts and dots
 ghostsAmount = 4
 numOfBroken = 50
 
 def main():
     start = time.time()
-    myMaze = maze.Maze(m, n, ghostsAmount, cherries, numberOfBroken=numOfBroken, setSeed = True, seed = 22)
+    myMaze = maze2.Maze(m, n, ghostsAmount, cherries, numberOfBroken=numOfBroken, setSeed = True, seed = 22)
     tileSize = 20
     width = myMaze.trueN
     height = myMaze.trueM
+    THRDS = 2
+    
+    myPool = Pool(processes=THRDS)
+
 
     pygame.font.init()
     font = pygame.font.SysFont('freesansbold.ttf', 24)
@@ -29,22 +35,22 @@ def main():
     screen = pygame.display.set_mode(((width + 2) * tileSize, (height + 5) * tileSize))
     pygame.display.set_caption("Pacman")
 
-    pacmans = creatures.createPacmans()
-    ghosts = creatures.createGhosts(ghostsAmount)
+    pacmans = creatures2.createPacmans()
+    ghosts = creatures2.createGhosts(ghostsAmount)
 
-    visualization.initBoard(myMaze, screen, width, height)
-    visualization.drawBorders(screen, width, height)
+    visualization2.initBoard(myMaze, screen, width, height)
+    visualization2.drawBorders(screen, width, height)
 
     myMaze.spawnPacmans(pacmans)
     myMaze.spawnGhosts(ghosts)
     
-    visualization.spawnCreatures(screen, ghosts, pacmans)
+    visualization2.spawnCreatures(screen, ghosts, pacmans)
     pygame.display.flip()
-    
+
     GAME = True
     DELAY = 0.01
     GHOST_MOVE_SWITCH = 1
-    print("g")
+
     while GAME:
 
         for event in pygame.event.get():
@@ -61,10 +67,10 @@ def main():
         newGhostsPosition = []
 
         for pacman in pacmans:
-            newPacmanPositions.append(movingAlgorithms.getNextPacmanMove(myMaze, pacman))
+            newPacmanPositions.append(movingAlgorithms2.getNextPacmanMove(myPool, myMaze, pacman))
         if GHOST_MOVE_SWITCH:
             for ghost in ghosts:
-                newPos = movingAlgorithms.getGhostNextMove(myMaze, ghost, pacmans)
+                newPos = movingAlgorithms2.getGhostNextMove(myMaze, ghost, pacmans)
                 newGhostsPosition.append(newPos)
                 ghost.setLastMove((newPos[0] - ghost._x, newPos[1] - ghost._y))
 
@@ -76,7 +82,7 @@ def main():
         if GHOST_MOVE_SWITCH:
             myMaze.changeGhostsCoordinates(ghosts, newGhostsPosition)
 
-        visualization.redrawBoard(screen, myMaze, pacmans, ghosts, oldGhosts + oldPacmans)
+        visualization2.redrawBoard(screen, myMaze, pacmans, ghosts, oldGhosts + oldPacmans)
         for pacman in pacmans:
             move = myMaze.checkMove(pacman)
             # if move == 0:

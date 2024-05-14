@@ -177,10 +177,10 @@ def getNextPacmanMove(myMaze: maze.Maze, pacman: creatures.Pacman, algo: int = 0
     closest = min(dots, key= lambda dot: len(algos[algo - 1](myMaze, pacman, dot)))
     way = algos[algo - 1](myMaze, pacman, closest)
     b = time.time()
-    if algo == 1:
-        print("Dijksta's:", b - a)
-    else:
-        print("A-star:", b - a)
+    # if algo == 1:
+    #     print("Dijksta's:", b - a)
+    # else:
+    #     print("A-star:", b - a)
     try:
         nextMove = way[0]
     except IndexError:

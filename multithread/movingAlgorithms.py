@@ -191,10 +191,10 @@ def getNextPacmanMove(mypool, myMaze: maze.Maze, pacman: creatures.Pacman, thrds
     res = mypool.starmap_async(algos[algo - 1], items)
     ways = res.get()
     b = time.time()
-    if algo == 1:
-        print("Dijksta's:", b - a)
-    else:
-        print("A-star:", b - a)
+    # if algo == 1:
+    #     print("Dijksta's:", b - a)
+    # else:
+    #     print("A-star:", b - a)
     for way in ways:
         length = len(way)
         if length < minLength:

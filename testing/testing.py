@@ -4,10 +4,10 @@ from simulate2 import simulate as multithread
 from simulate3 import simulate as numba
 from simulate4 import simulate as max_perf
 
-#implementations = [(default, "default"), (multithread, "multithread"), (numba, "numba"), (max_perf, "max_perf")]
-implementations = [(numba, "numba"), (max_perf, "max_perf")]
-#implementations = [(max_perf, "max_perf")]
+result_filename = "res_game_perf_3.txt"
 
+implementations = [(default, "default"), (multithread, "multithread"), (numba, "numba"), (max_perf, "max_perf")]
+#implementations = [(numba, "numba"), (max_perf, "max_perf")]
 
 def general_test(m, n, ghosts, cherries, broken, seed, end, step, criteria):
     if criteria == 1: # size
@@ -20,18 +20,21 @@ def general_test(m, n, ghosts, cherries, broken, seed, end, step, criteria):
         inputs = [[m, n, ghosts, cherries, broken + i*step, seed] for i in range((end-broken)//step)]
     elif criteria == 5:  # seed
         inputs = [[m, n, ghosts, cherries, broken, seed + i*step] for i in range((end-seed)//step)]
+    elif criteria == 6:  # ghosts
+        inputs = [[m, n, ghosts+i*step, cherries, broken, seed] for i in range((end-ghosts)//step)]
     else:
         print("Select criteria from 1 to 5")
         return None
 
-    with open("game_perf.txt", 'w', encoding='utf-8') as file:
+    with open(result_filename, 'w', encoding='utf-8') as file:
         for item in inputs:
             print(item)
             line = test_criteria(*item)
-            item = " ".join(map(lambda x:str(x),item))
+            item = " ".join(map(lambda x:str(x),item)) + "\n"
             file.write(item)
             line = ([", ".join(map(lambda x: str(x), res)) for res in line])
             line = "\n".join(line)
+            line += '\n'
             file.write(line)
 
             

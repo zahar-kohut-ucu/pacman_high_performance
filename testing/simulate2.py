@@ -9,7 +9,7 @@ from multiprocessing import Pool
 sys.setrecursionlimit(100000)
 
 def simulate(m, n, ghostsAmount, cherries, numOfBroken, sed):
-    THRDS = 10
+    THRDS = 4
     myMaze = maze2.Maze(m, n, ghostsAmount, cherries, numberOfBroken = numOfBroken, setSeed = True, seed = sed)
     
     pacmans = creatures2.createPacmans()

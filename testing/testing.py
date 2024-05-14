@@ -4,7 +4,10 @@ from simulate2 import simulate as multithread
 from simulate3 import simulate as numba
 from simulate4 import simulate as max_perf
 
-implementations = [(default, "default"), (multithread, "multithread"), (numba, "numba"), (max_perf, "max_perf")]
+#implementations = [(default, "default"), (multithread, "multithread"), (numba, "numba"), (max_perf, "max_perf")]
+implementations = [(numba, "numba"), (max_perf, "max_perf")]
+#implementations = [(max_perf, "max_perf")]
+
 
 def general_test(m, n, ghosts, cherries, broken, seed, end, step, criteria):
     if criteria == 1: # size
@@ -21,7 +24,7 @@ def general_test(m, n, ghosts, cherries, broken, seed, end, step, criteria):
         print("Select criteria from 1 to 5")
         return None
 
-    with open("res.txt", 'w', encoding='utf-8') as file:
+    with open("game_perf.txt", 'w', encoding='utf-8') as file:
         for item in inputs:
             print(item)
             line = test_criteria(*item)
@@ -43,4 +46,4 @@ def test_criteria(m, n, ghosts, cherries, broken, seed):
         results.append(mini_res)
     return results
 
-general_test(25, 25, 4, 25, 50, 10, 50, 5, 2)
+general_test(35, 35, 4, 35, 150, 200, 500, 5, 5)
